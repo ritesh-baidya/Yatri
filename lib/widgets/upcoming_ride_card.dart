@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import '../util/responsive.dart';
 import '../theme/yatri_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class UpcomingRideCard extends StatelessWidget {
   const UpcomingRideCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final r = Responsive(context);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -92,10 +91,13 @@ class UpcomingRideCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 18),
                       // Date and Time
-                      Row(
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 6,
+                        runSpacing: 4,
                         children: [
-                          const Icon(Icons.calendar_today_outlined, color: Color(0xFF64748B), size: 14),
-                          const SizedBox(width: 6),
+                          const Icon(Icons.calendar_today_outlined,
+                              color: Color(0xFF64748B), size: 14),
                           Text(
                             'Sun, 25 May',
                             style: GoogleFonts.inter(
@@ -104,15 +106,13 @@ class UpcomingRideCard extends StatelessWidget {
                               color: const Color(0xFF475569),
                             ),
                           ),
-                          const SizedBox(width: 8),
                           Container(
                             height: 12,
                             width: 1,
                             color: const Color(0xFFE2E8F0),
                           ),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.access_time, color: Color(0xFF64748B), size: 14),
-                          const SizedBox(width: 6),
+                          const Icon(Icons.access_time,
+                              color: Color(0xFF64748B), size: 14),
                           Text(
                             '7:00 AM',
                             style: GoogleFonts.inter(
@@ -126,14 +126,16 @@ class UpcomingRideCard extends StatelessWidget {
                       const SizedBox(height: 14),
 
                       // Seats and Price
-                      Row(
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 6,
+                        runSpacing: 4,
                         children: [
                           const Icon(
                             Icons.person_outline_rounded,
                             color: Color(0xFF64748B),
                             size: 15,
                           ),
-                          const SizedBox(width: 6),
                           Text(
                             "3 Seats",
                             style: GoogleFonts.inter(
@@ -142,19 +144,16 @@ class UpcomingRideCard extends StatelessWidget {
                               color: const Color(0xFF475569),
                             ),
                           ),
-                          const SizedBox(width: 8),
                           Container(
                             height: 12,
                             width: 1,
                             color: const Color(0xFFE2E8F0),
                           ),
-                          const SizedBox(width: 8),
                           const Icon(
                             Icons.local_offer_outlined,
                             color: Color(0xFF64748B),
                             size: 14,
                           ),
-                          const SizedBox(width: 6),
                           Text(
                             "Rs. 700 / seat",
                             style: GoogleFonts.inter(
@@ -168,13 +167,13 @@ class UpcomingRideCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(width: 8), // Reduced from 12 to save space
-                
+
                 // Right Map Preview Widget
                 Container(
-                  width: r.widthPct(0.23), // Reduced from 0.25 to save space
-                  height: r.widthPct(0.23), // Reduced from 0.25 to save space
+                  width: 80,
+                  height: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
@@ -192,9 +191,10 @@ class UpcomingRideCard extends StatelessWidget {
                 ),
               ],
             ),
-            
-            const SizedBox(height: 16), // Restored from 2 to look clean like mockup
-            
+
+            const SizedBox(
+                height: 16), // Restored from 2 to look clean like mockup
+
             // Bottom Button
             Container(
               width: double.infinity,
@@ -204,7 +204,7 @@ class UpcomingRideCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF056434).withOpacity(0.15),
+                    color: const Color(0xFF056434).withValues(alpha: 0.15),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),

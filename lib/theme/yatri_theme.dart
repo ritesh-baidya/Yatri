@@ -32,7 +32,7 @@ class YatriTheme {
   static ThemeData get lightTheme => ThemeData(
         scaffoldBackgroundColor: scaffoldBg,
         primaryColor: primary,
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           headlineLarge: TextStyle(
             fontFamily: 'Inter',
             fontSize: 24,

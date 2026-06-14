@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 import '../util/responsive.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../theme/yatri_theme.dart';
 
 class EarningsCard extends StatelessWidget {
-  const EarningsCard({Key? key}) : super(key: key);
+  const EarningsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     final r = Responsive(context);
-    // Shift the card slightly upward using Transform
-    return Transform.translate(
-  offset: Offset(0, -r.heightPct(0.04)),
-  child: Container(
-    width: double.infinity,
+    return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF042111).withOpacity(0.9),
-            const Color(0xFF0C4125).withOpacity(0.9),
+            const Color(0xFF042111).withValues(alpha: 0.9),
+            const Color(0xFF0C4125).withValues(alpha: 0.9),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        border: Border.all(color: Colors.white.withOpacity(0.06), width: 1.0),
+        border:
+            Border.all(color: Colors.white.withValues(alpha: 0.06), width: 1.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             offset: const Offset(0, 10),
             blurRadius: 20,
             spreadRadius: -4,
@@ -52,7 +49,7 @@ class EarningsCard extends StatelessWidget {
                 Text(
                   "Today's Earnings",
                   style: GoogleFonts.inter(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
@@ -93,7 +90,7 @@ class EarningsCard extends StatelessWidget {
                           Text(
                             '3 Rides Completed',
                             style: GoogleFonts.inter(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 9.0,
                               fontWeight: FontWeight.w500,
                             ),
@@ -105,7 +102,7 @@ class EarningsCard extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 6),
                         width: 1,
                         height: 8,
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                       ),
                       // Great Job badge
                       Row(
@@ -154,6 +151,6 @@ class EarningsCard extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 }

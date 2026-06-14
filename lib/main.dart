@@ -6,8 +6,6 @@ import 'util/responsive.dart';
 import 'widgets/earnings_card.dart';
 import 'widgets/upcoming_ride_card.dart';
 
-
-
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -40,42 +38,66 @@ class DriverDashboard extends StatefulWidget {
 class _DriverDashboardState extends State<DriverDashboard> {
   int _currentTabIndex = 0;
 
+  Widget _buildOtherTabContent(int index) {
+    final titles = ['My Rides', 'Post', 'Requests', 'Profile'];
+    return Scaffold(
+      backgroundColor: YatriTheme.scaffoldBg,
+      appBar: AppBar(
+        title: Text(
+          titles[index],
+          style: const TextStyle(
+            color: Color(0xFF0F172A),
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Text(
+          '${titles[index]} Screen',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF64748B),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final width = mediaQuery.size.width;
     final height = mediaQuery.size.height;
     final isDesktop = width > 480;
-    final r = Responsive(context);
+
+    Widget dashboardBody;
+    if (_currentTabIndex == 0) {
+      dashboardBody = SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildHeaderSection(),
+            _buildMainContentSection(),
+            const SizedBox(height: 100), // Space for bottom nav bar
+          ],
+        ),
+      );
+    } else {
+      dashboardBody = _buildOtherTabContent(_currentTabIndex);
+    }
 
     Widget dashboardContent = Scaffold(
       backgroundColor: YatriTheme.scaffoldBg,
       body: Stack(
         children: [
-          // Dashboard Content (non-scrollable)
+          // Dashboard Content (scrollable)
           Positioned.fill(
-            child: Column(
-              children: [
-                _buildHeaderSection(),
-                // Today's Earnings Card positioned directly below header, overlapping the seam
-                Transform.translate(
-                  offset: const Offset(0, -100),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: r.widthPct(0.05)),
-                    child: const EarningsCard(),
-                  ),
-                ),
-                // Main Content Section shifted up accordingly to sit below EarningsCard
-                Transform.translate(
-                  offset: const Offset(0, -100),
-                  child: _buildMainContentSection(),
-                ),
-                const SizedBox(height: 80), // Space for bottom nav bar
-              ],
-            ),
+            child: dashboardBody,
           ),
-          
-
 
           // Pinned Bottom Navigation Bar
           Positioned(
@@ -102,7 +124,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                 width: 140,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0F172A).withOpacity(0.9),
+                  color: const Color(0xFF0F172A).withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(2.5),
                 ),
               ),
@@ -150,7 +172,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                   border: Border.all(color: const Color(0xFF09140E), width: 10),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.65),
+                      color: Colors.black.withValues(alpha: 0.65),
                       blurRadius: 36,
                       offset: const Offset(0, 18),
                     ),
@@ -170,79 +192,16 @@ class _DriverDashboardState extends State<DriverDashboard> {
     return dashboardContent;
   }
 
-  // Simulated status bar to match the iOS 9:41 UI in the mockup
-  Widget _buildSimulatedStatusBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      color: Colors.transparent,
-      child: SafeArea(
-        bottom: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Time
-            const Text(
-              "9:41",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-            
-            // Icons (Signal, Wifi, Battery)
-            Row(
-              children: [
-                const Icon(
-                  Icons.signal_cellular_alt_rounded,
-                  color: Colors.white,
-                  size: 16,
-                ),
-                const SizedBox(width: 5),
-                const Icon(
-                  Icons.wifi,
-                  color: Colors.white,
-                  size: 16,
-                ),
-                const SizedBox(width: 5),
-                // Custom battery icon
-                Container(
-                  width: 20,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 1.5),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  padding: const EdgeInsets.all(1),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      width: 12,
-                      height: double.infinity,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Custom painted background for header section (gradient + mountains + car + user stats)
+  // Custom painted background for header section (gradient + car + user stats + earnings card)
   Widget _buildHeaderSection() {
     final r = Responsive(context);
     return Container(
       width: double.infinity,
-      height: r.heightPct(0.42), // increased height for a taller hero background
-
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF042111),
-            const Color(0xFF0C4125),
+            Color(0xFF042111),
+            Color(0xFF0C4125),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -253,9 +212,9 @@ class _DriverDashboardState extends State<DriverDashboard> {
           // Car illustration on the right (responsive width, blended with background)
           Positioned(
             right: -r.widthPct(0.1), // Move further left
-            
-            top: r.heightPct(0.10), // moved further down
-            width: r.widthPct(0.85), // Increased width to scale and position the car correctly
+            top: r.heightPct(0.04), // moved further down
+            width: r.widthPct(
+                0.85), // Increased width to scale and position the car correctly
             height: r.heightPct(0.21), // Further reduced height
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
@@ -303,42 +262,34 @@ class _DriverDashboardState extends State<DriverDashboard> {
               r.widthPct(0.05),
               r.heightPct(0.045), // Reduced from 0.07 to prevent overflow
               r.widthPct(0.05),
-              r.heightPct(0.015), // Reduced from 0.03 to prevent overflow
+              0.0,
             ),
             child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 // Spacer for status bar
-                const SizedBox(height: 60), // Increased spacing for greeting text
-                
+                const SizedBox(
+                    height: 48), // Increased spacing for greeting text
+
                 // Greeting and Notification Row
                 Row(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: const [
-                              Text(
-                                "Hello, Ram Kumar",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                  letterSpacing: -0.2,
-                                ),
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                "👋",
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ],
+                          const Text(
+                            "Hello, Ram Kumar 👋",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              letterSpacing: -0.2,
+                            ),
                           ),
                           const SizedBox(height: 6),
                           Text(
@@ -346,43 +297,40 @@ class _DriverDashboardState extends State<DriverDashboard> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
-                              color: Colors.white.withOpacity(0.85),
+                              color: Colors.white.withValues(alpha: 0.85),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    
+
                     // Notification bell with red dot
-                    Transform.translate(
-                      offset: const Offset(0, -32),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 0.0),
-                        child: Stack(
-                          children: [
-                            const Icon(
-                              Icons.notifications_none,
-                              color: Colors.white,
-                              size: 28,
-                            ),
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                          ],
+                    Stack(
+                      children: [
+                        const Icon(
+                          Icons.notifications_none,
+                          color: Colors.white,
+                          size: 28,
                         ),
-                      ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+                const SizedBox(height: 24),
+                const EarningsCard(),
+                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -391,10 +339,10 @@ class _DriverDashboardState extends State<DriverDashboard> {
     );
   }
 
-  // The bottom section containing upcoming ride and safety banner
+  // The bottom section containing upcoming ride with curved white background
   Widget _buildMainContentSection() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -402,25 +350,28 @@ class _DriverDashboardState extends State<DriverDashboard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Upcoming Ride",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF0F172A),
+              const Expanded(
+                child: Text(
+                  "Upcoming Ride",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF0F172A),
+                  ),
                 ),
               ),
-              
+
               // "Next Up" Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE6F6EE),
+                  color: const Color.fromARGB(255, 246, 230, 230),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Text(
                       "Next Up",
                       style: TextStyle(
@@ -440,62 +391,12 @@ class _DriverDashboardState extends State<DriverDashboard> {
               ),
             ],
           ),
-          const SizedBox(height: 28),
-          
+          const SizedBox(height: 20),
+
           // Upcoming Ride Card Widget
           const UpcomingRideCard(),
         ],
       ),
     );
   }
-}
-
-// Custom Painter to draw soft mountain silhouettes in the header
-class MountainPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint1 = Paint()
-      ..color = const Color(0xFF053E23).withOpacity(0.4)
-      ..style = PaintingStyle.fill;
-
-    final paint2 = Paint()
-      ..color = const Color(0xFF03311A).withOpacity(0.5)
-      ..style = PaintingStyle.fill;
-
-    // Background mountains
-    final path1 = Path();
-    path1.moveTo(0, size.height);
-    path1.lineTo(0, size.height * 0.5);
-    path1.quadraticBezierTo(
-      size.width * 0.2, size.height * 0.25,
-      size.width * 0.4, size.height * 0.45,
-    );
-    path1.quadraticBezierTo(
-      size.width * 0.65, size.height * 0.65,
-      size.width * 0.9, size.height * 0.35,
-    );
-    path1.lineTo(size.width, size.height * 0.45);
-    path1.lineTo(size.width, size.height);
-    path1.close();
-    canvas.drawPath(path1, paint1);
-
-    // Foreground mountains/hills
-    final path2 = Path();
-    path2.moveTo(0, size.height);
-    path2.lineTo(0, size.height * 0.75);
-    path2.quadraticBezierTo(
-      size.width * 0.25, size.height * 0.45,
-      size.width * 0.5, size.height * 0.65,
-    );
-    path2.quadraticBezierTo(
-      size.width * 0.75, size.height * 0.8,
-      size.width, size.height * 0.55,
-    );
-    path2.lineTo(size.width, size.height);
-    path2.close();
-    canvas.drawPath(path2, paint2);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
