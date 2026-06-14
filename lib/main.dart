@@ -5,7 +5,6 @@ import 'widgets/bottom_nav_bar.dart';
 import 'util/responsive.dart';
 import 'widgets/earnings_card.dart';
 import 'widgets/upcoming_ride_card.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 
 
@@ -60,19 +59,18 @@ class _DriverDashboardState extends State<DriverDashboard> {
                 _buildHeaderSection(),
                 // Today's Earnings Card positioned directly below header, overlapping the seam
                 Transform.translate(
-                  offset: const Offset(0, -120),
+                  offset: const Offset(0, -100),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: r.widthPct(0.05)),
                     child: const EarningsCard(),
                   ),
                 ),
                 // Main Content Section shifted up accordingly to sit below EarningsCard
-                Expanded(
-                  child: Transform.translate(
-                    offset: const Offset(0, -70),
-                    child: _buildMainContentSection(),
-                  ),
+                Transform.translate(
+                  offset: const Offset(0, -100),
+                  child: _buildMainContentSection(),
                 ),
+                const SizedBox(height: 80), // Space for bottom nav bar
               ],
             ),
           ),
@@ -146,7 +144,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
               child: Container(
                 width: 380,
                 height: clampedHeight,
-                margin: const EdgeInsets.only(top: 10, bottom: 20),
+                margin: const EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(44),
                   border: Border.all(color: const Color(0xFF09140E), width: 10),
@@ -238,7 +236,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
     final r = Responsive(context);
     return Container(
       width: double.infinity,
-      height: r.heightPct(0.43), // increased height for a taller hero background
+      height: r.heightPct(0.42), // increased height for a taller hero background
 
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -252,12 +250,6 @@ class _DriverDashboardState extends State<DriverDashboard> {
       ),
       child: Stack(
         children: [
-          // Mountain silhouettes and pagoda temples
-          Positioned.fill(
-            child: CustomPaint(
-              painter: MountainPainter(),
-            ),
-          ),
           // Car illustration on the right (responsive width, blended with background)
           Positioned(
             right: -r.widthPct(0.1), // Move further left
@@ -331,28 +323,28 @@ class _DriverDashboardState extends State<DriverDashboard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            children: [
+                            children: const [
                               Text(
                                 "Hello, Ram Kumar",
-                                style: GoogleFonts.inter(
-                                  fontSize: 22,
+                                style: TextStyle(
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
-                                  letterSpacing: -0.4,
+                                  letterSpacing: -0.2,
                                 ),
                               ),
-                              const SizedBox(width: 6),
-                              const Text(
+                              SizedBox(width: 6),
+                              Text(
                                 "👋",
-                                style: TextStyle(fontSize: 24),
+                                style: TextStyle(fontSize: 22),
                               ),
                             ],
                           ),
                           const SizedBox(height: 6),
                           Text(
                             "Ready to drive today?",
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
+                            style: TextStyle(
+                              fontSize: 13,
                               fontWeight: FontWeight.w400,
                               color: Colors.white.withOpacity(0.85),
                             ),
@@ -401,24 +393,8 @@ class _DriverDashboardState extends State<DriverDashboard> {
 
   // The bottom section containing upcoming ride and safety banner
   Widget _buildMainContentSection() {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 16,
-            offset: const Offset(0, -6),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -426,12 +402,12 @@ class _DriverDashboardState extends State<DriverDashboard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 "Upcoming Ride",
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF0F172A),
+                  color: Color(0xFF0F172A),
                 ),
               ),
               
@@ -444,18 +420,18 @@ class _DriverDashboardState extends State<DriverDashboard> {
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Text(
                       "Next Up",
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF0A5C36),
+                        color: Color(0xFF0A5C36),
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    const Icon(
-                      Icons.arrow_outward,
+                    SizedBox(width: 4),
+                    Icon(
+                      Icons.trending_up,
                       color: Color(0xFF0A5C36),
                       size: 12,
                     ),
@@ -464,12 +440,10 @@ class _DriverDashboardState extends State<DriverDashboard> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
           
           // Upcoming Ride Card Widget
           const UpcomingRideCard(),
-          const Spacer(),
-          const SizedBox(height: 100),
         ],
       ),
     );
@@ -486,14 +460,6 @@ class MountainPainter extends CustomPainter {
 
     final paint2 = Paint()
       ..color = const Color(0xFF03311A).withOpacity(0.5)
-      ..style = PaintingStyle.fill;
-
-    final paintTree = Paint()
-      ..color = const Color(0xFF022B16).withOpacity(0.55)
-      ..style = PaintingStyle.fill;
-
-    final paintPagoda = Paint()
-      ..color = const Color(0xFF012010).withOpacity(0.65)
       ..style = PaintingStyle.fill;
 
     // Background mountains
@@ -528,82 +494,6 @@ class MountainPainter extends CustomPainter {
     path2.lineTo(size.width, size.height);
     path2.close();
     canvas.drawPath(path2, paint2);
-
-    // Pine trees and Pagodas sitting along the hill line
-    _drawPineTree(canvas, Offset(size.width * 0.38, size.height * 0.64), 18, 42, paintTree);
-    _drawPineTree(canvas, Offset(size.width * 0.44, size.height * 0.63), 14, 32, paintTree);
-    
-    // Pagoda 1 (Small)
-    _drawPagoda(canvas, Offset(size.width * 0.49, size.height * 0.64), 22, 45, paintPagoda);
-    
-    // Pagoda 2 (Large, main)
-    _drawPagoda(canvas, Offset(size.width * 0.56, size.height * 0.67), 28, 60, paintPagoda);
-    
-    // Pine trees on the right side
-    _drawPineTree(canvas, Offset(size.width * 0.63, size.height * 0.68), 16, 38, paintTree);
-    _drawPineTree(canvas, Offset(size.width * 0.68, size.height * 0.69), 12, 28, paintTree);
-  }
-
-  void _drawPagoda(Canvas canvas, Offset bottomCenter, double width, double height, Paint paint) {
-    final double tierHeight = height / 3.5;
-    
-    // Base platform
-    final Rect baseRect = Rect.fromLTWH(bottomCenter.dx - width * 0.4, bottomCenter.dy - 3, width * 0.8, 3);
-    canvas.drawRect(baseRect, paint);
-    
-    double currentY = bottomCenter.dy - 3;
-    
-    for (int i = 0; i < 3; i++) {
-      final double roofWidth = width * (1.0 - i * 0.22);
-      final double bodyWidth = roofWidth * 0.55;
-      final double nextY = currentY - tierHeight;
-      
-      // Body walls
-      final Rect bodyRect = Rect.fromLTWH(bottomCenter.dx - bodyWidth / 2, nextY, bodyWidth, tierHeight);
-      canvas.drawRect(bodyRect, paint);
-      
-      // Roof (trapezoid)
-      final Path roofPath = Path();
-      roofPath.moveTo(bottomCenter.dx - roofWidth / 2, nextY + tierHeight * 0.15);
-      roofPath.lineTo(bottomCenter.dx + roofWidth / 2, nextY + tierHeight * 0.15);
-      roofPath.lineTo(bottomCenter.dx + roofWidth * 0.25 / 2, nextY);
-      roofPath.lineTo(bottomCenter.dx - roofWidth * 0.25 / 2, nextY);
-      roofPath.close();
-      canvas.drawPath(roofPath, paint);
-      
-      currentY = nextY;
-    }
-    
-    // Spire
-    final Path spirePath = Path();
-    spirePath.moveTo(bottomCenter.dx - width * 0.08, currentY);
-    spirePath.lineTo(bottomCenter.dx + width * 0.08, currentY);
-    spirePath.lineTo(bottomCenter.dx, currentY - height * 0.12);
-    spirePath.close();
-    canvas.drawPath(spirePath, paint);
-  }
-
-  void _drawPineTree(Canvas canvas, Offset bottomCenter, double width, double height, Paint paint) {
-    // Trunk
-    final Rect trunk = Rect.fromLTWH(bottomCenter.dx - width * 0.12, bottomCenter.dy - height * 0.12, width * 0.24, height * 0.12);
-    canvas.drawRect(trunk, paint);
-    
-    // 3 layers of leaves
-    double currentY = bottomCenter.dy - height * 0.1;
-    double currentWidth = width;
-    final double stepY = height * 0.32;
-    
-    for (int i = 0; i < 3; i++) {
-      final Path leaves = Path();
-      leaves.moveTo(bottomCenter.dx - currentWidth / 2, currentY);
-      leaves.lineTo(bottomCenter.dx + currentWidth / 2, currentY);
-      leaves.lineTo(bottomCenter.dx, currentY - stepY);
-      leaves.close();
-      canvas.drawPath(leaves, paint);
-      
-      currentY -= stepY * 0.6;
-      currentWidth *= 0.72;
-    }
   }
 
   @override
