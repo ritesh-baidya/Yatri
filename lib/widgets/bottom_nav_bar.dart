@@ -15,73 +15,133 @@ class YatriBottomNavBar extends StatelessWidget {
   static const List<_NavItem> _items = [
     _NavItem(icon: Icons.directions_car_rounded, label: 'My Rides'),
     _NavItem(icon: Icons.edit_square, label: 'Post'),
-    _NavItem(icon: Icons.chat_bubble_outline_rounded, label: 'Requests'),
+    _NavItem(icon: Icons.near_me_rounded, label: 'Requests'),
     _NavItem(icon: Icons.person_outline_rounded, label: 'Profile'),
   ];
 
+  // Index of the center/highlighted item
+  static const int _centerIndex = 2;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(top: 12, bottom: 20, left: 8, right: 8),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x18000000),
-            blurRadius: 16,
-            offset: Offset(0, -4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(_items.length, (index) {
-          final item = _items[index];
-          final isSelected = index == selectedIndex;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => onTap(index),
-              behavior: HitTestBehavior.opaque,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    item.icon,
-                    color: isSelected
-                        ? YatriTheme.primary
-                        : const Color(0xFF94A3B8),
-                    size: 24,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    item.label,
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      fontWeight:
-                          isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color: isSelected
-                          ? YatriTheme.primary
-                          : const Color(0xFF94A3B8),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  // Underline indicator for selected tab
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeOut,
-                    height: 3,
-                    width: isSelected ? 28 : 0,
-                    decoration: BoxDecoration(
-                      color: YatriTheme.primary,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ],
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.12),
+                blurRadius: 24,
+                offset: const Offset(0, 6),
               ),
-            ),
-          );
-        }),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(_items.length, (index) {
+              final item = _items[index];
+              final isSelected = index == selectedIndex;
+              final isCenter = index == _centerIndex;
+
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => onTap(index),
+                  behavior: HitTestBehavior.opaque,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: isCenter
+                        ? _buildCenterItem(item, isSelected)
+                        : _buildRegularItem(item, isSelected),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _buildCenterItem(_NavItem item, bool isSelected) {
+    return Column(
+      key: const ValueKey('center'),
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          width: 52,
+          height: 52,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isSelected
+                ? YatriTheme.primary
+                : const Color(0xFFE8F5EE),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: YatriTheme.primary.withValues(alpha: 0.4),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Icon(
+            item.icon,
+            color: isSelected ? Colors.white : YatriTheme.primary,
+            size: 26,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          item.label,
+          style: GoogleFonts.inter(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: isSelected ? YatriTheme.primary : const Color(0xFF94A3B8),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegularItem(_NavItem item, bool isSelected) {
+    return Column(
+      key: ValueKey(item.label),
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 6),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? YatriTheme.primary.withValues(alpha: 0.1)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            item.icon,
+            color: isSelected ? YatriTheme.primary : const Color(0xFF94A3B8),
+            size: 22,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          item.label,
+          style: GoogleFonts.inter(
+            fontSize: 11,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            color: isSelected ? YatriTheme.primary : const Color(0xFF94A3B8),
+          ),
+        ),
+      ],
     );
   }
 }
