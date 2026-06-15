@@ -81,7 +81,24 @@ class _DriverDashboardState extends State<DriverDashboard> {
         child: Column(
           children: [
             _buildHeaderSection(),
-            _buildMainContentSection(),
+            // White Content Section
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(32),
+                  topRight: Radius.circular(32),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _buildMainContentSection(),
+                ),
+              ),
+            ),
             const SizedBox(height: 100), // Space for bottom nav bar
           ],
         ),
@@ -91,46 +108,41 @@ class _DriverDashboardState extends State<DriverDashboard> {
     }
 
     Widget dashboardContent = Scaffold(
-      backgroundColor: YatriTheme.scaffoldBg,
-      body: Stack(
-        children: [
-          // Dashboard Content (scrollable)
-          Positioned.fill(
-            child: dashboardBody,
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF0F3D22),
+              Color(0xFF1A5C35),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-
-          // Pinned Bottom Navigation Bar
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: YatriBottomNavBar(
-              selectedIndex: _currentTabIndex,
-              onTap: (index) {
-                setState(() {
-                  _currentTabIndex = index;
-                });
-              },
+        ),
+        child: Stack(
+          children: [
+            // Dashboard Content (scrollable)
+            Positioned.fill(
+              child: dashboardBody,
             ),
-          ),
 
-          // Simulated iOS Home Indicator at the very bottom
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 8,
-            child: Center(
-              child: Container(
-                width: 140,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0F172A).withValues(alpha: 0.9),
-                  borderRadius: BorderRadius.circular(2.5),
-                ),
+            // Pinned Bottom Navigation Bar
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: YatriBottomNavBar(
+                selectedIndex: _currentTabIndex,
+                onTap: (index) {
+                  setState(() {
+                    _currentTabIndex = index;
+                  });
+                },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
 
@@ -195,24 +207,14 @@ class _DriverDashboardState extends State<DriverDashboard> {
   // Custom painted background for header section (gradient + car + user stats + earnings card)
   Widget _buildHeaderSection() {
     final r = Responsive(context);
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF042111),
-            Color(0xFF0C4125),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
       child: Stack(
         children: [
           // Car illustration on the right (responsive width, blended with background)
           Positioned(
             right: -r.widthPct(0.1), // Move further left
-            top: r.heightPct(0.04), // moved further down
+            top: r.heightPct(0.08), // moved further down
             width: r.widthPct(
                 0.85), // Increased width to scale and position the car correctly
             height: r.heightPct(0.21), // Further reduced height
@@ -260,7 +262,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
           Padding(
             padding: EdgeInsets.fromLTRB(
               r.widthPct(0.05),
-              r.heightPct(0.045), // Reduced from 0.07 to prevent overflow
+              r.heightPct(0.04),
               r.widthPct(0.05),
               0.0,
             ),
@@ -268,36 +270,32 @@ class _DriverDashboardState extends State<DriverDashboard> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Spacer for status bar
-                const SizedBox(
-                    height: 48), // Increased spacing for greeting text
-
                 // Greeting and Notification Row
                 Row(
-                  mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
+                    Transform.translate(
+                      offset:
+                          const Offset(0, 45), // Move only greeting text down
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
                             "Hello, Ram Kumar 👋",
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 21,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
-                              letterSpacing: -0.2,
+                              letterSpacing: -0.5,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 4),
                           Text(
                             "Ready to drive today?",
                             style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white.withValues(alpha: 0.85),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white.withValues(alpha: 0.8),
                             ),
                           ),
                         ],
@@ -310,16 +308,16 @@ class _DriverDashboardState extends State<DriverDashboard> {
                         const Icon(
                           Icons.notifications_none,
                           color: Colors.white,
-                          size: 28,
+                          size: 30,
                         ),
                         Positioned(
-                          top: 0,
-                          right: 0,
+                          top: 4,
+                          right: 4,
                           child: Container(
                             width: 8,
                             height: 8,
                             decoration: const BoxDecoration(
-                              color: Colors.red,
+                              color: Color(0xFFEF4444),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -328,9 +326,11 @@ class _DriverDashboardState extends State<DriverDashboard> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(
+                    height: 106), // Adjusted to move EarningsCard 5px down
                 const EarningsCard(),
-                const SizedBox(height: 16),
+                const SizedBox(
+                    height: 18), // More space before the white section
               ],
             ),
           ),
@@ -340,63 +340,57 @@ class _DriverDashboardState extends State<DriverDashboard> {
   }
 
   // The bottom section containing upcoming ride with curved white background
-  Widget _buildMainContentSection() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  List<Widget> _buildMainContentSection() {
+    return [
+      // "Upcoming Ride" Row
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // "Upcoming Ride" Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Expanded(
-                child: Text(
-                  "Upcoming Ride",
+          const Expanded(
+            child: Text(
+              "Upcoming Ride",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF0F172A),
+              ),
+            ),
+          ),
+
+          // "Next Up" Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFFECFDF5),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Next Up",
                   style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F172A),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF059669),
                   ),
                 ),
-              ),
-
-              // "Next Up" Badge
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 246, 230, 230),
-                  borderRadius: BorderRadius.circular(20),
+                SizedBox(width: 4),
+                Icon(
+                  Icons.trending_up,
+                  color: Color(0xFF059669),
+                  size: 14,
                 ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "Next Up",
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF0A5C36),
-                      ),
-                    ),
-                    SizedBox(width: 4),
-                    Icon(
-                      Icons.trending_up,
-                      color: Color(0xFF0A5C36),
-                      size: 12,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const SizedBox(height: 20),
-
-          // Upcoming Ride Card Widget
-          const UpcomingRideCard(),
         ],
       ),
-    );
+      const SizedBox(height: 20),
+
+      // Upcoming Ride Card Widget
+      const UpcomingRideCard(),
+      const SizedBox(height: 130),
+    ];
   }
 }
