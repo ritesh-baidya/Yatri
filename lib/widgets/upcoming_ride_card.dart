@@ -90,79 +90,100 @@ class UpcomingRideCard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 18),
-                      // Date and Time
-                      Row(
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          const Icon(Icons.calendar_today_outlined,
-                              color: Color(0xFF64748B), size: 14),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Sun, 25 May',
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF475569),
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.calendar_today_outlined,
+                                  color: Color(0xFF64748B), size: 14),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Sun, 25 May',
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF475569),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
                           Container(
                             height: 12,
                             width: 1,
                             color: const Color(0xFFE2E8F0),
                           ),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.access_time,
-                              color: Color(0xFF64748B), size: 14),
-                          const SizedBox(width: 4),
-                          Text(
-                            '7:00 AM',
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF475569),
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.access_time,
+                                  color: Color(0xFF64748B), size: 14),
+                              const SizedBox(width: 4),
+                              Text(
+                                '7:00 AM',
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF475569),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                       const SizedBox(height: 14),
 
                       // Seats and Price
-                      Row(
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.person_outline_rounded,
-                            color: Color(0xFF64748B),
-                            size: 15,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.person_outline_rounded,
+                                color: Color(0xFF64748B),
+                                size: 15,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "3 Seats",
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF475569),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            "3 Seats",
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF475569),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
                           Container(
                             height: 12,
                             width: 1,
                             color: const Color(0xFFE2E8F0),
                           ),
-                          const SizedBox(width: 8),
-                          const Icon(
-                            Icons.local_offer_outlined,
-                            color: Color(0xFF64748B),
-                            size: 14,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            "Rs. 700 / seat",
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF475569),
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.local_offer_outlined,
+                                color: Color(0xFF64748B),
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "Rs. 700 / seat",
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF475569),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

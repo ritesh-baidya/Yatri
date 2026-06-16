@@ -7,6 +7,7 @@ import 'widgets/earnings_card.dart';
 import 'widgets/upcoming_ride_card.dart';
 import 'pages/post_ride_page.dart';
 import 'pages/profile_page.dart';
+import 'pages/booking_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -46,6 +47,9 @@ class _DriverDashboardState extends State<DriverDashboard> {
     }
     if (index == 2) {
       return const YatriFonepayQR();
+    }
+    if (index == 3) {
+      return const BookingPage();
     }
     if (index == 4) {
       return const ProfilePage();
@@ -95,12 +99,12 @@ class _DriverDashboardState extends State<DriverDashboard> {
 
     Widget dashboardBody;
     if (_currentTabIndex == 0) {
-      dashboardBody = SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeaderSection(),
-            // White Content Section
-            Container(
+      dashboardBody = Column(
+        children: [
+          _buildHeaderSection(),
+          // White Content Section
+          Expanded(
+            child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -113,13 +117,15 @@ class _DriverDashboardState extends State<DriverDashboard> {
                 padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _buildMainContentSection(),
+                  children: [
+                    ..._buildMainContentSection(),
+                    const SizedBox(height: 24),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 100), // Space for bottom nav bar
-          ],
-        ),
+          ),
+        ],
       );
     } else {
       dashboardBody = _buildOtherTabContent(_currentTabIndex);
@@ -140,7 +146,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
         ),
         child: Stack(
           children: [
-            // Dashboard Content (scrollable)
+            // Dashboard Content
             Positioned.fill(
               child: dashboardBody,
             ),
@@ -408,7 +414,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
 
       // Upcoming Ride Card Widget
       const UpcomingRideCard(),
-      const SizedBox(height: 200),
+      const SizedBox(height: 24),
     ];
   }
 }

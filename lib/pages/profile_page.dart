@@ -6,12 +6,12 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          _buildProfileHeroSection(context),
-          // White Content Section
-          Container(
+    return Column(
+      children: [
+        _buildProfileHeroSection(context),
+        // White Content Section
+        Expanded(
+          child: Container(
             width: double.infinity,
             decoration: const BoxDecoration(
               color: Colors.white,
@@ -21,16 +21,16 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 80),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: _buildProfileMainContentSection(),
               ),
             ),
           ),
-          const SizedBox(height: 100), // Space for bottom nav bar
-        ],
-      ),
+        ),
+        // Removed spacer to eliminate gap
+      ],
     );
   }
 
@@ -98,7 +98,7 @@ class ProfilePage extends StatelessWidget {
 
           // Content
           Padding(
-            padding: EdgeInsets.fromLTRB(20, r.heightPct(0.06), 20, 24),
+            padding: EdgeInsets.fromLTRB(20, r.heightPct(0.05), 20, 16),
             child: Column(
               children: [
                 // Profile Info Row
@@ -115,7 +115,7 @@ class ProfilePage extends StatelessWidget {
                           ),
                           child: const CircleAvatar(
                             radius: 45,
-                            backgroundImage: AssetImage('assets/images/user.png'),
+                            backgroundImage: AssetImage('assets/images/profile_image.jpg'),
                           ),
                         ),
                         Positioned(
@@ -159,7 +159,7 @@ class ProfilePage extends StatelessWidget {
                                 "ramkumar@email.com",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white.withValues(alpha: 0.8),
+                                  color: Colors.white.withOpacity(0.8),
                                 ),
                               ),
                               const SizedBox(width: 4),
@@ -175,7 +175,7 @@ class ProfilePage extends StatelessWidget {
                                 "+977 982xxxxxxx",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white.withValues(alpha: 0.8),
+                                  color: Colors.white.withOpacity(0.8),
                                 ),
                               ),
                             ],
@@ -186,15 +186,15 @@ class ProfilePage extends StatelessWidget {
                   ],
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
 
                 // Stats Card
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                    border: Border.all(color: Colors.white.withOpacity(0.1)),
                   ),
                   child: Row(
                     children: [
@@ -302,108 +302,120 @@ class ProfilePage extends StatelessWidget {
         title: "Settings",
         subtitle: "Manage your app preferences and account settings",
       ),
-      const SizedBox(height: 24),
+      const SizedBox(height: 12),
       // Switch to Passenger Card
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF0FDF4),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFDCFCE7)),
-        ),
+          // Switch to Passenger Card
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0FDF4),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFDCFCE7)),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF059669),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.people_outline, color: Colors.white, size: 24),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Switch to Passenger Mode",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF0F172A),
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        "Book rides for your travel",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF64748B),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF065F46),
+                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {
+                    // TODO: implement switch action
+                  },
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Switch", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
+                      SizedBox(width: 4),
+                      Icon(Icons.chevron_right, color: Colors.white, size: 16),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+    ];
+  }
+
+  Widget _buildProfileMenuItem({required IconData icon, required String title, required String subtitle}) {
+    return InkWell(
+      onTap: () {
+        // TODO: handle navigation for $title
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: Color(0xFF059669),
-                shape: BoxShape.circle,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.people_outline, color: Colors.white, size: 24),
+              child: Icon(icon, color: const Color(0xFF059669), size: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Switch to Passenger Mode",
-                    style: TextStyle(
-                      fontSize: 16,
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFF0F172A),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
-                    "Book rides for your travel",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: const Color(0xFF64748B),
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF64748B),
                     ),
                   ),
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: const Color(0xFF065F46),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Row(
-                children: [
-                  Text("Switch", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
-                  SizedBox(width: 4),
-                  Icon(Icons.chevron_right, color: Colors.white, size: 16),
-                ],
-              ),
-            ),
+            const Icon(Icons.chevron_right, color: Color(0xFF94A3B8), size: 24),
           ],
         ),
-      ),
-    ];
-  }
-
-  Widget _buildProfileMenuItem({required IconData icon, required String title, required String subtitle}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: const Color(0xFF059669), size: 24),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F172A),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF64748B),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(Icons.chevron_right, color: Color(0xFF94A3B8), size: 24),
-        ],
       ),
     );
   }

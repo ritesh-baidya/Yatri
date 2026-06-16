@@ -12,7 +12,7 @@ class Responsive {
     // Clamp layout size to mobile simulation bounds on desktop
     if (width > 480) {
       final clampedHeight = height > 940 ? 900 : height - 40;
-      return Size(420, clampedHeight.toDouble());
+      return Size(360, clampedHeight.toDouble());
     }
     return Size(width, height);
   }

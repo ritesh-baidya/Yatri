@@ -11,6 +11,30 @@ class PostRidePage extends StatefulWidget {
 
 class _PostRidePageState extends State<PostRidePage> {
   int _seatsCount = 4;
+  DateTime _selectedDate = DateTime(2026, 6, 16);
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 17, minute: 6);
+  String _selectedCategory = 'Bike';
+
+  late TextEditingController _fromController;
+  late TextEditingController _toController;
+  late TextEditingController _priceController;
+
+  @override
+  void initState() {
+    super.initState();
+    _fromController =
+        TextEditingController(text: "Tokha Gate Newari Khaja Ghar NH3...");
+    _toController = TextEditingController(text: "");
+    _priceController = TextEditingController(text: "700");
+  }
+
+  @override
+  void dispose() {
+    _fromController.dispose();
+    _toController.dispose();
+    _priceController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +46,8 @@ class _PostRidePageState extends State<PostRidePage> {
           children: [
             // 1. Custom Header/App Bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               child: Row(
                 children: [
                   // Back Button with rounded corner, light green background
@@ -50,7 +75,8 @@ class _PostRidePageState extends State<PostRidePage> {
                   Expanded(
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 40.0), // center offset
+                        padding:
+                            const EdgeInsets.only(right: 40.0), // center offset
                         child: Text(
                           "Post a New Ride",
                           style: GoogleFonts.inter(
@@ -70,12 +96,17 @@ class _PostRidePageState extends State<PostRidePage> {
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 110), // Bottom padding for bottom nav bar
+                padding: const EdgeInsets.fromLTRB(
+                    16, 4, 16, 110), // Bottom padding for bottom nav bar
                 child: Column(
                   children: [
                     // Map Card
                     _buildMapCard(context),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 16),
+
+                    // Category Selector Row
+                    _buildCategorySelector(),
+                    const SizedBox(height: 16),
 
                     // Input Form Card
                     _buildDetailsCard(),
@@ -125,7 +156,8 @@ class _PostRidePageState extends State<PostRidePage> {
               left: 12,
               top: 12,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -146,7 +178,8 @@ class _PostRidePageState extends State<PostRidePage> {
                       height: 18,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xFF0A5C36), width: 2.5),
+                        border: Border.all(
+                            color: const Color(0xFF0A5C36), width: 2.5),
                         color: Colors.white,
                       ),
                       child: Center(
@@ -172,7 +205,8 @@ class _PostRidePageState extends State<PostRidePage> {
                     const SizedBox(width: 6),
                     // Start Badge
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: const Color(0xFFE6F6EE),
                         borderRadius: BorderRadius.circular(6),
@@ -291,7 +325,8 @@ class _PostRidePageState extends State<PostRidePage> {
               right: 24,
               bottom: 48,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -318,7 +353,8 @@ class _PostRidePageState extends State<PostRidePage> {
                     const SizedBox(height: 3),
                     // Destination Badge
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFEE2E2),
                         borderRadius: BorderRadius.circular(6),
@@ -342,7 +378,8 @@ class _PostRidePageState extends State<PostRidePage> {
               left: 12,
               bottom: 12,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -419,6 +456,82 @@ class _PostRidePageState extends State<PostRidePage> {
     );
   }
 
+  Widget _buildCategorySelector() {
+    final categories = [
+      {'name': 'Bike', 'icon': Icons.directions_bike_rounded},
+      {'name': 'Cab', 'icon': Icons.local_taxi_rounded},
+      {'name': 'Premium', 'icon': Icons.airport_shuttle_rounded},
+    ];
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: categories.map((cat) {
+        final isSelected = _selectedCategory == cat['name'];
+        return Expanded(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedCategory = cat['name'] as String;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color:
+                      isSelected ? const Color(0xFF0A5C36) : Colors.transparent,
+                  width: 1.5,
+                ),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: const Color(0xFF0A5C36).withValues(alpha: 0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        )
+                      ]
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.02),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        )
+                      ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    cat['icon'] as IconData,
+                    color: isSelected
+                        ? const Color(0xFF0A5C36)
+                        : const Color(0xFF94A3B8),
+                    size: 24,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    cat['name'] as String,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? const Color(0xFF0A5C36)
+                          : const Color(0xFF64748B),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   Widget _buildDetailsCard() {
     return Container(
       width: double.infinity,
@@ -488,141 +601,108 @@ class _PostRidePageState extends State<PostRidePage> {
   }
 
   Widget _buildSourceDestinationRow() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // From Kathmandu
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Pin green dot
-              Padding(
-                padding: const EdgeInsets.only(top: 3.0),
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: const BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFE2E8F0),
+          width: 1.0,
+        ),
+      ),
+      child: Column(
+        children: [
+          // Source Row
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                // Pink target dot icon
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(0xFF0F766E),
+                    border:
+                        Border.all(color: const Color(0xFF0A5C36), width: 2),
+                    color: Colors.white,
+                  ),
+                  child: Center(
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFF0A5C36),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "From",
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _fromController,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF0F172A),
+                    ),
+                    decoration: InputDecoration(
+                      hintText: "Enter Source",
+                      hintStyle: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                         color: const Color(0xFF94A3B8),
                       ),
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      "Kathmandu",
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF0F172A),
-                      ),
-                    ),
-                    Text(
-                      "Gongabu Bus Park",
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: const Color(0xFF64748B),
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-
-        // Vertical dotted divider
-        Container(
-          height: 40,
-          width: 1.5,
-          color: const Color(0xFFE2E8F0),
-        ),
-        const SizedBox(width: 12),
-
-        // To Pokhara
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Pin red dot
-              const Padding(
-                padding: EdgeInsets.only(top: 2.0),
-                child: Icon(
+          // Divider line
+          const Divider(height: 1, color: Color(0xFFE2E8F0)),
+          // Destination Row
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                // Pink pin icon
+                const Icon(
                   Icons.location_on,
-                  color: Color(0xFFEF4444),
-                  size: 14,
+                  color: const Color(0xFF0A5C36),
+                  size: 20,
                 ),
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "To",
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _toController,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF0F172A),
+                    ),
+                    decoration: InputDecoration(
+                      hintText: "Enter Destination",
+                      hintStyle: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                         color: const Color(0xFF94A3B8),
                       ),
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      "Pokhara",
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF0F172A),
-                      ),
-                    ),
-                    Text(
-                      "Lakeside, Pokhara",
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: const Color(0xFF64748B),
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-
-        // Swap button
-        Container(
-          width: 36,
-          height: 36,
-          decoration: const BoxDecoration(
-            color: Color(0xFFE6F6EE),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.swap_horiz,
-            color: Color(0xFF0A5C36),
-            size: 20,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -631,47 +711,63 @@ class _PostRidePageState extends State<PostRidePage> {
       children: [
         // Date Column
         Expanded(
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(12),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: _selectedDate,
+                firstDate: DateTime.now().subtract(const Duration(days: 365)),
+                lastDate: DateTime.now().add(const Duration(days: 365)),
+              );
+              if (picked != null) {
+                setState(() {
+                  _selectedDate = picked;
+                });
+              }
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.calendar_today_rounded,
+                    color: Color(0xFF0A5C36),
+                    size: 20,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.calendar_today_rounded,
-                  color: Color(0xFF0A5C36),
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Date",
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF94A3B8),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Date",
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF94A3B8),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      "Sun, 25 May 2025",
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF0F172A),
+                      const SizedBox(height: 2),
+                      Text(
+                        "${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}",
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF0F172A),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
 
@@ -685,47 +781,61 @@ class _PostRidePageState extends State<PostRidePage> {
 
         // Departure Time Column
         Expanded(
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(12),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () async {
+              final picked = await showTimePicker(
+                context: context,
+                initialTime: _selectedTime,
+              );
+              if (picked != null) {
+                setState(() {
+                  _selectedTime = picked;
+                });
+              }
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.access_time_rounded,
+                    color: Color(0xFF0A5C36),
+                    size: 20,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.access_time_rounded,
-                  color: Color(0xFF0A5C36),
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Departure Time",
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF94A3B8),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Departure Time",
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF94A3B8),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      "07:00 AM",
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF0F172A),
+                      const SizedBox(height: 2),
+                      Text(
+                        _selectedTime.format(context),
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF0F172A),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -759,7 +869,7 @@ class _PostRidePageState extends State<PostRidePage> {
                 Text(
                   "Available Seats",
                   style: GoogleFonts.inter(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF94A3B8),
                   ),
@@ -768,7 +878,7 @@ class _PostRidePageState extends State<PostRidePage> {
                 Text(
                   "$_seatsCount Seats",
                   style: GoogleFonts.inter(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w700,
                     color: const Color(0xFF0F172A),
                   ),
@@ -867,27 +977,50 @@ class _PostRidePageState extends State<PostRidePage> {
           ),
         ),
         const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Price per seat",
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF94A3B8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Price per seat",
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF94A3B8),
+                ),
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              "Rs. 700",
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF0F172A),
+              const SizedBox(height: 2),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Rs. ",
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF0F172A),
+                    ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _priceController,
+                      keyboardType: TextInputType.number,
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF0F172A),
+                      ),
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -913,7 +1046,7 @@ class _PostRidePageState extends State<PostRidePage> {
         children: [
           // Overlapping hatchback green car asset on the left edge
           Positioned(
-            left: -8,
+            left: 0,
             bottom: -2,
             top: -2,
             width: 90,

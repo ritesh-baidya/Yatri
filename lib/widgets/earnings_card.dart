@@ -94,8 +94,9 @@ class _EarningsCardState extends State<EarningsCard> {
                   ),
                 ),
                 // Badges row
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
                   children: [
                     // Rides Completed badge
                     Container(
@@ -125,7 +126,6 @@ class _EarningsCardState extends State<EarningsCard> {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 6),
                     // Great Job badge
                     Container(
                       padding: const EdgeInsets.symmetric(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/yatri_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class YatriBottomNavBar extends StatelessWidget {
@@ -16,7 +15,7 @@ class YatriBottomNavBar extends StatelessWidget {
     _NavItem(icon: Icons.directions_car_rounded, label: 'My Rides'),
     _NavItem(icon: Icons.edit_square, label: 'Post'),
     _NavItem(icon: Icons.qr_code_rounded, label: 'QR Pay'),
-    _NavItem(icon: Icons.near_me_rounded, label: 'Requests'),
+    _NavItem(icon: Icons.notifications_rounded, label: 'Booking'),
     _NavItem(icon: Icons.person_outline_rounded, label: 'Profile'),
   ];
 
@@ -30,7 +29,7 @@ class YatriBottomNavBar extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // 1. Custom Painted Background with Notch and Shadow
+          // 1. Custom Painted Background with Notch, Rounded Corners and Shadow
           CustomPaint(
             size: Size(MediaQuery.of(context).size.width, barHeight),
             painter: BottomNavBarPainter(),
@@ -62,7 +61,7 @@ class YatriBottomNavBar extends StatelessWidget {
             ),
           ),
 
-          // 3. Floating Circular Blue Scan Button (sunken into the notch)
+          // 3. Floating Circular QR Pay Button (sunken into the notch)
           Positioned(
             top: -20, // Positioned sticking out above the nav bar
             left: MediaQuery.of(context).size.width / 2 - (buttonSize / 2),
@@ -73,18 +72,22 @@ class YatriBottomNavBar extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: YatriTheme.primary, // green theme
+                  color: Colors.white,
+                  border: Border.all(
+                    color: const Color(0xFF02462a),
+                    width: 3.5,
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: YatriTheme.primary.withValues(alpha: 0.4),
-                      blurRadius: 12,
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
                 child: const Icon(
                   Icons.qr_code_rounded, // QR Code icon
-                  color: Colors.white,
+                  color: Color(0xFF02462a),
                   size: 28,
                 ),
               ),
@@ -100,15 +103,18 @@ class YatriBottomNavBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        const SizedBox(height: 42),
+        const SizedBox(height: 26),
         Text(
           item.label,
           style: GoogleFonts.inter(
             fontSize: 11,
             fontWeight: FontWeight.w700,
-            color: isSelected ? YatriTheme.primary : const Color(0xFF94A3B8),
+            color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
           ),
         ),
+        const SizedBox(height: 6),
+        const SizedBox(height: 3),
+        const SizedBox(height: 4),
       ],
     );
   }
@@ -119,30 +125,34 @@ class YatriBottomNavBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? YatriTheme.primary.withValues(alpha: 0.1)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            item.icon,
-            color: isSelected ? YatriTheme.primary : const Color(0xFF94A3B8),
-            size: 22,
-          ),
+        Icon(
+          item.icon,
+          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
+          size: 22,
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 4),
         Text(
           item.label,
           style: GoogleFonts.inter(
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? YatriTheme.primary : const Color(0xFF94A3B8),
+            color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
           ),
         ),
+        const SizedBox(height: 6),
+        AnimatedOpacity(
+          duration: const Duration(milliseconds: 150),
+          opacity: isSelected ? 1.0 : 0.0,
+          child: Container(
+            width: 16,
+            height: 3,
+            decoration: BoxDecoration(
+              color: const Color(0xFF00CC76), // bright green selection indicator
+              borderRadius: BorderRadius.circular(1.5),
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
       ],
     );
   }
@@ -152,15 +162,23 @@ class BottomNavBarPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = const Color.fromARGB(255, 236, 234, 234)
+      ..color = const Color(0xFF02462a)
       ..style = PaintingStyle.fill;
 
     double centerX = size.width / 2;
     double notchWidth = 84.0;
     double notchDepth = 26.0;
+    double cornerRadius = 24.0;
 
     Path path = Path();
-    path.moveTo(0, 0);
+    // Start at bottom-left
+    path.moveTo(0, size.height);
+    
+    // Draw left vertical line up to the top curve
+    path.lineTo(0, cornerRadius);
+    
+    // Top-left corner curve
+    path.quadraticBezierTo(0, 0, cornerRadius, 0);
 
     // Draw top edge line up to the notch
     path.lineTo(centerX - notchWidth / 2 - 12, 0);
@@ -185,8 +203,16 @@ class BottomNavBarPainter extends CustomPainter {
       0,
     );
 
-    path.lineTo(size.width, 0);
+    // Draw top edge line to the top-right curve
+    path.lineTo(size.width - cornerRadius, 0);
+
+    // Top-right corner curve
+    path.quadraticBezierTo(size.width, 0, size.width, cornerRadius);
+
+    // Draw right vertical line to bottom-right
     path.lineTo(size.width, size.height);
+    
+    // Draw bottom horizontal line back to bottom-left
     path.lineTo(0, size.height);
     path.close();
 
