@@ -21,8 +21,8 @@ class _EarningsCardState extends State<EarningsCard> {
         borderRadius: BorderRadius.circular(20),
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF042111).withValues(alpha: 0.9),
-            const Color(0xFF0C4125).withValues(alpha: 0.9),
+            const Color.fromARGB(255, 8, 48, 26).withValues(alpha: 0.9),
+            const Color.fromARGB(255, 16, 71, 42).withValues(alpha: 0.9),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
