@@ -5,6 +5,8 @@ import 'widgets/bottom_nav_bar.dart';
 import 'util/responsive.dart';
 import 'widgets/earnings_card.dart';
 import 'widgets/upcoming_ride_card.dart';
+import 'pages/post_ride_page.dart';
+import 'pages/profile_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -39,8 +41,14 @@ class _DriverDashboardState extends State<DriverDashboard> {
   int _currentTabIndex = 0;
 
   Widget _buildOtherTabContent(int index) {
+    if (index == 1) {
+      return const PostRidePage();
+    }
     if (index == 2) {
       return const YatriFonepayQR();
+    }
+    if (index == 4) {
+      return const ProfilePage();
     }
 
     final titles = {
