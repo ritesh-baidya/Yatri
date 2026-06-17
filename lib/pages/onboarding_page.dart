@@ -1,0 +1,589 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'rider_dashboard.dart';
+
+class OnboardingPage extends StatefulWidget {
+  const OnboardingPage({super.key});
+
+  @override
+  State<OnboardingPage> createState() => _OnboardingPageState();
+}
+
+class _OnboardingPageState extends State<OnboardingPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeIn;
+  late Animation<Offset> _slideUp;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+    _fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _slideUp = Tween<Offset>(
+      begin: const Offset(0, 0.15),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _navigateToDashboard() {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 500),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const RiderDashboard(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Background color matching the warm cream/beige from the design
+    const bgColor = Color(0xFFF7F0E8);
+
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: Stack(
+        children: [
+          // ─── Bottom background image pinned at bottom ───
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.0),
+                    Colors.white.withValues(alpha: 0.6),
+                    Colors.white,
+                  ],
+                  stops: const [0.0, 0.15, 0.35],
+                ).createShader(bounds);
+              },
+              blendMode: BlendMode.dstIn,
+              child: Image.asset(
+                'assets/images/onboarding_buttom_bg.png',
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+          ),
+
+          // ─── Main content on top ───
+          SafeArea(
+            bottom: false,
+            child: FadeTransition(
+              opacity: _fadeIn,
+              child: SlideTransition(
+                position: _slideUp,
+                child: Column(
+                  children: [
+                    // ─── Top: Onboarding Image + Yatri Branding ───
+                    Expanded(
+                      flex: 4,
+                      child: _buildTopSection(),
+                    ),
+
+                    // ─── Bottom: Mode Selection Cards ───
+                    Expanded(
+                      flex: 4,
+                      child: _buildBottomSection(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // TOP SECTION — Onboarding image + Yatri logo text + tagline
+  // ════════════════════════════════════════════════════════════
+  Widget _buildTopSection() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // Background image — onboarding_bg.png
+        Positioned.fill(
+          child: ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.white,
+                  Colors.white,
+                  Colors.white.withValues(alpha: 0.0),
+                ],
+                stops: const [0.0, 0.65, 1.0],
+              ).createShader(bounds);
+            },
+            blendMode: BlendMode.dstIn,
+            child: Image.asset(
+              'assets/images/onboarding_bg.png',
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            ),
+          ),
+        ),
+
+        // Yatri branding overlay
+        Positioned(
+          top: 20,
+          left: 0,
+          right: 0,
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              // "Yatri" logo text
+              Text(
+                'Yatri',
+                style: GoogleFonts.poppins(
+                  fontSize: 62,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFFE52020),
+                  height: 1.0,
+                  letterSpacing: -1,
+                ),
+              ),
+              const SizedBox(height: 2),
+              // "Travel Together" subtitle
+              Text(
+                'Travel Together',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF2D2D2D),
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(height: 2),
+              // "Share the Journey" tagline
+              Text(
+                'Share the Journey',
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF777777),
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Decorative red line with diamond
+              _buildDecorativeDivider(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // BOTTOM SECTION — "Choose your mode" + selection cards
+  // ════════════════════════════════════════════════════════════
+  Widget _buildBottomSection() {
+    return Container(
+      alignment: Alignment.topCenter,
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // "Choose your mode" heading
+          Text(
+            'Choose your mode',
+            style: GoogleFonts.inter(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF1A1A1A),
+            ),
+          ),
+          const SizedBox(height: 6),
+          // "You can switch anytime" subtitle with diamond
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'You can switch anytime',
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF888888),
+                ),
+              ),
+              const SizedBox(height: 6),
+              // Small diamond icon centered
+              Transform.rotate(
+                angle: 0.785398, // 45 degrees
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFE52020),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 22),
+
+          // ── Passenger Mode Card (Red gradient) ──
+          _buildPassengerModeCard(),
+
+          const SizedBox(height: 14),
+
+          // ── Driver Mode Card (White with border) ──
+          _buildDriverModeCard(),
+
+          const Spacer(),
+
+          // ── Page indicator dots ──
+          _buildPageIndicator(),
+
+          const SizedBox(height: 10),
+
+          // ── "Splash / Onboarding" label ──
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom + 10,
+            ),
+            child: Text(
+              'Splash / Onboarding',
+              style: GoogleFonts.inter(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF999999),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ────────────────────────────────────
+  // DECORATIVE DIVIDER — Red line + diamond
+  // ────────────────────────────────────
+  Widget _buildDecorativeDivider() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 40,
+          height: 2.5,
+          decoration: BoxDecoration(
+            color: const Color(0xFFE52020),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 8),
+        // Diamond shape
+        Transform.rotate(
+          angle: 0.785398,
+          child: Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color(0xFFE52020),
+                width: 1.5,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Container(
+          width: 40,
+          height: 2.5,
+          decoration: BoxDecoration(
+            color: const Color(0xFFE52020),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ────────────────────────────────────
+  // PASSENGER MODE CARD — Red gradient
+  // ────────────────────────────────────
+  Widget _buildPassengerModeCard() {
+    return GestureDetector(
+      onTap: _navigateToDashboard,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFFE52020), Color(0xFFCC1A1A)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFE52020).withValues(alpha: 0.35),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Person icon in a rounded square
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(
+                Icons.person_outline_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+            const SizedBox(width: 14),
+
+            // Text content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Passenger Mode',
+                    style: GoogleFonts.inter(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    'Find rides & travel safe',
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white.withValues(alpha: 0.85),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Arrow button
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.chevron_right_rounded,
+                color: Color(0xFFE52020),
+                size: 24,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ────────────────────────────────────
+  // DRIVER MODE CARD — White with border
+  // ────────────────────────────────────
+  Widget _buildDriverModeCard() {
+    return GestureDetector(
+      onTap: _navigateToDashboard,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFFEEEEEE),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Car icon in a rounded square
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF0F0),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(
+                Icons.directions_car_rounded,
+                color: Color(0xFFE52020),
+                size: 26,
+              ),
+            ),
+            const SizedBox(width: 14),
+
+            // Text content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Driver Mode',
+                    style: GoogleFonts.inter(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF1A1A1A),
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    'Post rides & earn more',
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF888888),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Arrow button
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: const Color(0xFFE52020),
+                  width: 1.5,
+                ),
+              ),
+              child: const Icon(
+                Icons.chevron_right_rounded,
+                color: Color(0xFFE52020),
+                size: 24,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ────────────────────────────────────
+  // PAGE INDICATOR — Dots with step number
+  // ────────────────────────────────────
+  Widget _buildPageIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Active indicator with number "1"
+        Container(
+          width: 24,
+          height: 24,
+          decoration: const BoxDecoration(
+            color: Color(0xFFE52020),
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            '1',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        // Connecting line
+        Container(
+          width: 28,
+          height: 2.5,
+          color: const Color(0xFFE52020),
+        ),
+        // Dot 2 (inactive)
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: const Color(0xFFDDDDDD),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: const Color(0xFFCCCCCC),
+              width: 1,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        // Dot 3 (inactive)
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: const Color(0xFFDDDDDD),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: const Color(0xFFCCCCCC),
+              width: 1,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        // Dot 4 (inactive)
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: const Color(0xFFDDDDDD),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: const Color(0xFFCCCCCC),
+              width: 1,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

@@ -16,7 +16,7 @@ class YatriTheme {
 
   static const List<BoxShadow> cardShadow = [
     BoxShadow(
-      color: Colors.black12,
+      color: const Color(0x33000000),
       offset: Offset(0, 2),
       blurRadius: 4,
       spreadRadius: 0,

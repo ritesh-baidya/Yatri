@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../theme/yatri_theme.dart';
 
 class YatriBottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -12,7 +13,7 @@ class YatriBottomNavBar extends StatelessWidget {
   });
 
   static const List<_NavItem> _items = [
-    _NavItem(icon: Icons.directions_car_outlined, label: 'My Rides'),
+    _NavItem(icon: Icons.home_outlined, label: 'Home'),
     _NavItem(icon: Icons.edit_square, label: 'Post'),
     _NavItem(icon: Icons.qr_code_outlined, label: 'QR Pay'),
     _NavItem(icon: Icons.calendar_today_outlined, label: 'Booking'),
@@ -26,15 +27,15 @@ class YatriBottomNavBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
         child: Container(
-          height: 76,
+          height: 82,
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 235, 234, 234),
-            borderRadius: BorderRadius.circular(38),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(41),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+                color: Colors.black.withValues(alpha: 0.35),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
               ),
             ],
           ),
@@ -59,40 +60,46 @@ class YatriBottomNavBar extends StatelessWidget {
   }
 
   Widget _buildItem(_NavItem item, bool isSelected) {
-    final activeColor = const Color(0xFF007A48);
-    final inactiveColor = const Color(0xFF64748B);
+    const activeColor = YatriTheme.primary;
+    const inactiveColor = Color(0xFF94A3B8);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 8),
-        Icon(
-          item.icon,
-          color: isSelected ? activeColor : inactiveColor,
-          size: 24,
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: isSelected ? activeColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: activeColor.withValues(alpha: 0.35),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          alignment: Alignment.center,
+          child: Icon(
+            item.icon,
+            color: isSelected ? Colors.white : inactiveColor,
+            size: 24,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           item.label,
           style: GoogleFonts.inter(
-            fontSize: 11,
+            fontSize: 10,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
             color: isSelected ? activeColor : inactiveColor,
           ),
         ),
-        const SizedBox(height: 8),
-        // Active indicator line at the bottom
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: isSelected ? 32 : 0,
-          height: 3,
-          decoration: BoxDecoration(
-            color: activeColor,
-            borderRadius: BorderRadius.circular(1.5),
-          ),
-        ),
-        const SizedBox(height: 4),
       ],
     );
   }

@@ -446,6 +446,8 @@ class _BookingPageState extends State<BookingPage> {
             fontWeight: FontWeight.w700,
             color: const Color(0xFF0F172A),
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 6),
 
@@ -472,12 +474,16 @@ class _BookingPageState extends State<BookingPage> {
               style: TextStyle(color: Color(0xFFCBD5E1)),
             ),
             const SizedBox(width: 8),
-            Text(
-              "${request.ridesCount} rides",
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF64748B),
+            Expanded(
+              child: Text(
+                "${request.ridesCount} rides",
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF64748B),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -493,12 +499,16 @@ class _BookingPageState extends State<BookingPage> {
               size: 15,
             ),
             const SizedBox(width: 8),
-            Text(
-              request.date,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF64748B),
+            Expanded(
+              child: Text(
+                request.date,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF64748B),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -514,12 +524,16 @@ class _BookingPageState extends State<BookingPage> {
               size: 15,
             ),
             const SizedBox(width: 8),
-            Text(
-              request.time,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF64748B),
+            Expanded(
+              child: Text(
+                request.time,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF64748B),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -706,13 +720,13 @@ class _BookingPageState extends State<BookingPage> {
                     // Avatar
                     _buildAvatarWidget(request.name, request.avatarAsset,
                         request.useAssetAvatar),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
 
                     // Details
                     Expanded(
                       child: _buildDetailsColumn(request),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
 
                     // Vertical Divider
                     Container(
@@ -720,7 +734,7 @@ class _BookingPageState extends State<BookingPage> {
                       height: 72,
                       color: const Color(0xFFE2E8F0),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
 
                     // Calendar block
                     _buildCalendarBlock(request),

@@ -31,7 +31,7 @@ class _EarningsCardState extends State<EarningsCard> {
             Border.all(color: Colors.white.withValues(alpha: 0.06), width: 1.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
+            color: Colors.black.withValues(alpha: 0.35),
             offset: const Offset(0, 10),
             blurRadius: 20,
             spreadRadius: -4,
