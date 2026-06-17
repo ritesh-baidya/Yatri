@@ -198,36 +198,6 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
-  Widget _buildLocationButton() {
-    return Container(
-      width: 44,
-      height: 44,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () {},
-          child: const Icon(
-            Icons.location_on,
-            color: Color(0xFF007A48),
-            size: 22,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildTabBar() {
     return Container(
       width: double.infinity,
