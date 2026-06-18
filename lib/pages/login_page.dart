@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'rider_dashboard.dart';
+import 'otp_verification_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,13 +31,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onSendOtp() {
-    // TODO: implement OTP sending logic
-    Navigator.pushReplacement(
+    final phone =
+        _phoneController.text.isNotEmpty ? _phoneController.text : '98XXXXXXXX';
+    Navigator.push(
       context,
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 500),
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const RiderDashboard(),
+            OtpVerificationPage(phoneNumber: phone),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -661,7 +662,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         // Removed decorative yellow line that was visible at the bottom
-  
       ],
     );
   }
