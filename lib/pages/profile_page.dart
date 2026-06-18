@@ -111,11 +111,13 @@ class ProfilePage extends StatelessWidget {
                           padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: const Color(0xFF10B981), width: 2),
+                            border: Border.all(
+                                color: const Color(0xFF10B981), width: 2),
                           ),
                           child: const CircleAvatar(
                             radius: 45,
-                            backgroundImage: AssetImage('assets/images/profile_image.jpg'),
+                            backgroundImage:
+                                AssetImage('assets/images/profile_image.jpg'),
                           ),
                         ),
                         Positioned(
@@ -127,7 +129,8 @@ class ProfilePage extends StatelessWidget {
                               color: Color(0xFF10B981),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.check, color: Colors.white, size: 14),
+                            child: const Icon(Icons.check,
+                                color: Colors.white, size: 14),
                           ),
                         ),
                       ],
@@ -149,7 +152,8 @@ class ProfilePage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              const Icon(Icons.chevron_right, color: Colors.white, size: 24),
+                              const Icon(Icons.chevron_right,
+                                  color: Colors.white, size: 24),
                             ],
                           ),
                           const SizedBox(height: 4),
@@ -163,13 +167,15 @@ class ProfilePage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 4),
-                              const Icon(Icons.check_circle, color: Color(0xFF10B981), size: 14),
+                              const Icon(Icons.check_circle,
+                                  color: Color(0xFF10B981), size: 14),
                             ],
                           ),
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Icon(Icons.phone, color: Color(0xFF10B981), size: 14),
+                              const Icon(Icons.phone,
+                                  color: Color(0xFF10B981), size: 14),
                               const SizedBox(width: 6),
                               Text(
                                 "+977 982xxxxxxx",
@@ -203,7 +209,8 @@ class ProfilePage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.star, color: Color(0xFFF59E0B), size: 32),
+                            const Icon(Icons.star,
+                                color: Color(0xFFF59E0B), size: 32),
                             const SizedBox(width: 12),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +235,10 @@ class ProfilePage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(width: 1, height: 30, color: Colors.white.withValues(alpha: 0.2)),
+                      Container(
+                          width: 1,
+                          height: 30,
+                          color: Colors.white.withValues(alpha: 0.2)),
                       // Total Rides
                       Expanded(
                         child: Row(
@@ -240,7 +250,8 @@ class ProfilePage extends StatelessWidget {
                                 color: Color(0xFF059669),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.directions_car, color: Colors.white, size: 20),
+                              child: const Icon(Icons.directions_car,
+                                  color: Colors.white, size: 20),
                             ),
                             const SizedBox(width: 12),
                             Column(
@@ -304,75 +315,83 @@ class ProfilePage extends StatelessWidget {
       ),
       const SizedBox(height: 12),
       // Switch to Passenger Card
-          // Switch to Passenger Card
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF0FDF4),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFFDCFCE7)),
+      // Switch to Passenger Card
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF0FDF4),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFDCFCE7)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Color(0xFF059669),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.people_outline,
+                  color: Colors.white, size: 24),
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF059669),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.people_outline, color: Colors.white, size: 24),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Switch to Passenger Mode",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF0F172A),
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        "Book rides for your travel",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF64748B),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF065F46),
-                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Switch to Passenger Mode",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0F172A),
                     ),
                   ),
-                  onPressed: () {
-                    // TODO: implement switch action
-                  },
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("Switch", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
-                      SizedBox(width: 4),
-                      Icon(Icons.chevron_right, color: Colors.white, size: 16),
-                    ],
+                  SizedBox(height: 2),
+                  Text(
+                    "Book rides for your travel",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF64748B),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF065F46),
+                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              onPressed: () {
+                // TODO: implement switch action
+              },
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Switch",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13)),
+                  SizedBox(width: 4),
+                  Icon(Icons.chevron_right, color: Colors.white, size: 16),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     ];
   }
 
-  Widget _buildProfileMenuItem({required IconData icon, required String title, required String subtitle}) {
+  Widget _buildProfileMenuItem(
+      {required IconData icon,
+      required String title,
+      required String subtitle}) {
     return InkWell(
       onTap: () {
         // TODO: handle navigation for $title
