@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'theme/yatri_theme.dart';
-import 'pages/login_page.dart';
+import 'pages/onboarding_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Yatri – Travel Together',
       debugShowCheckedModeBanner: false,
       theme: YatriTheme.lightTheme,
-      home: const LoginPage(),
+      home: const OnboardingPage(),
     );
   }
 }

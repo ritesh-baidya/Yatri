@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'passenger_dashboard.dart';
 import 'rider_dashboard.dart';
 
 class OtpVerificationPage extends StatefulWidget {
@@ -91,7 +92,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage>
   }
 
   void _verifyOtp() {
-    // Navigate to RiderDashboard on successful verification
+    // Navigate to PassengerDashboard on successful verification
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) {
         Navigator.pushReplacement(
@@ -99,7 +100,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage>
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 500),
             pageBuilder: (context, animation, secondaryAnimation) =>
-                const RiderDashboard(),
+                const PassengerDashboard(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return FadeTransition(opacity: animation, child: child);

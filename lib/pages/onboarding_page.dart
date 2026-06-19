@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'login_page.dart';
 import 'rider_dashboard.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -36,7 +37,21 @@ class _OnboardingPageState extends State<OnboardingPage>
     super.dispose();
   }
 
-  void _navigateToDashboard() {
+  void _navigateToPassengerDashboard() {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 500),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const LoginPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    );
+  }
+
+  void _navigateToDriverDashboard() {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -63,7 +78,7 @@ class _OnboardingPageState extends State<OnboardingPage>
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: -50,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
                 return LinearGradient(
@@ -87,27 +102,24 @@ class _OnboardingPageState extends State<OnboardingPage>
           ),
 
           // ─── Main content on top ───
-          SafeArea(
-            bottom: false,
-            child: FadeTransition(
-              opacity: _fadeIn,
-              child: SlideTransition(
-                position: _slideUp,
-                child: Column(
-                  children: [
-                    // ─── Top: Onboarding Image + Yatri Branding ───
-                    Expanded(
-                      flex: 4,
-                      child: _buildTopSection(),
-                    ),
+          FadeTransition(
+            opacity: _fadeIn,
+            child: SlideTransition(
+              position: _slideUp,
+              child: Column(
+                children: [
+                  // ─── Top: Onboarding Image + Yatri Branding ───
+                  Expanded(
+                    flex: 4,
+                    child: _buildTopSection(),
+                  ),
 
-                    // ─── Bottom: Mode Selection Cards ───
-                    Expanded(
-                      flex: 4,
-                      child: _buildBottomSection(),
-                    ),
-                  ],
-                ),
+                  // ─── Bottom: Mode Selection Cards ───
+                  Expanded(
+                    flex: 4,
+                    child: _buildBottomSection(),
+                  ),
+                ],
               ),
             ),
           ),
@@ -140,7 +152,7 @@ class _OnboardingPageState extends State<OnboardingPage>
             },
             blendMode: BlendMode.dstIn,
             child: Image.asset(
-              'assets/images/onboarding_bg.png',
+              'assets/images/onboarding_top_bg.png',
               fit: BoxFit.cover,
               alignment: Alignment.center,
             ),
@@ -149,7 +161,7 @@ class _OnboardingPageState extends State<OnboardingPage>
 
         // Yatri branding overlay
         Positioned(
-          top: 20,
+          top: MediaQuery.of(context).padding.top + 20,
           left: 0,
           right: 0,
           child: Column(
@@ -209,73 +221,66 @@ class _OnboardingPageState extends State<OnboardingPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // "Choose your mode" heading
-          Text(
-            'Choose your mode',
-            style: GoogleFonts.inter(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF1A1A1A),
-            ),
-          ),
-          const SizedBox(height: 6),
-          // "You can switch anytime" subtitle with diamond
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'You can switch anytime',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFF888888),
-                ),
-              ),
-              const SizedBox(height: 6),
-              // Small diamond icon centered
-              Transform.rotate(
-                angle: 0.785398, // 45 degrees
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE52020),
+          // "Choose your mode" heading and subtitle with diamond translated upwards
+          Transform.translate(
+            offset: const Offset(0, -38),
+            child: Column(
+              children: [
+                Text(
+                  'Choose your mode',
+                  style: GoogleFonts.inter(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF1A1A1A),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                // "You can switch anytime" subtitle with diamond
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'You can switch anytime',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xFF888888),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    // Small diamond icon centered
+                    Transform.rotate(
+                      angle: 0.785398, // 45 degrees
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE52020),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 22),
 
-          // ── Passenger Mode Card (Red gradient) ──
-          _buildPassengerModeCard(),
-
-          const SizedBox(height: 14),
-
-          // ── Driver Mode Card (White with border) ──
-          _buildDriverModeCard(),
-
-          const Spacer(),
-
-          // ── Page indicator dots ──
-          _buildPageIndicator(),
-
-          const SizedBox(height: 10),
-
-          // ── "Splash / Onboarding" label ──
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).padding.bottom + 10,
-            ),
-            child: Text(
-              'Splash / Onboarding',
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF999999),
-              ),
+          // Passenger and Driver Mode cards translated upwards
+          Transform.translate(
+            offset: const Offset(0, -50),
+            child: Column(
+              children: [
+                // ── Passenger Mode Card (Red gradient) ──
+                _buildPassengerModeCard(),
+                const SizedBox(height: 14),
+                // ── Driver Mode Card (White with border) ──
+                _buildDriverModeCard(),
+              ],
             ),
           ),
+
+          // Page indicators removed
         ],
       ),
     );
@@ -329,7 +334,7 @@ class _OnboardingPageState extends State<OnboardingPage>
   // ────────────────────────────────────
   Widget _buildPassengerModeCard() {
     return GestureDetector(
-      onTap: _navigateToDashboard,
+      onTap: _navigateToPassengerDashboard,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -424,7 +429,7 @@ class _OnboardingPageState extends State<OnboardingPage>
   // ────────────────────────────────────
   Widget _buildDriverModeCard() {
     return GestureDetector(
-      onTap: _navigateToDashboard,
+      onTap: _navigateToDriverDashboard,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -514,76 +519,4 @@ class _OnboardingPageState extends State<OnboardingPage>
   // ────────────────────────────────────
   // PAGE INDICATOR — Dots with step number
   // ────────────────────────────────────
-  Widget _buildPageIndicator() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Active indicator with number "1"
-        Container(
-          width: 24,
-          height: 24,
-          decoration: const BoxDecoration(
-            color: Color(0xFFE52020),
-            shape: BoxShape.circle,
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            '1',
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        // Connecting line
-        Container(
-          width: 28,
-          height: 2.5,
-          color: const Color(0xFFE52020),
-        ),
-        // Dot 2 (inactive)
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-            color: const Color(0xFFDDDDDD),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: const Color(0xFFCCCCCC),
-              width: 1,
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        // Dot 3 (inactive)
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-            color: const Color(0xFFDDDDDD),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: const Color(0xFFCCCCCC),
-              width: 1,
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        // Dot 4 (inactive)
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-            color: const Color(0xFFDDDDDD),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: const Color(0xFFCCCCCC),
-              width: 1,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
