@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/passenger_bottom_nav_bar.dart';
 import '../pages/notification_page.dart';
-import '../pages/booking_page.dart';
-import '../pages/profile_page.dart';
+import '../pages/rider_booking_page.dart';
+import '../pages/passenger_profile.dart';
+import '../pages/rider_dashboard.dart';
 
 class PassengerDashboard extends StatefulWidget {
   const PassengerDashboard({super.key});
@@ -118,7 +119,7 @@ class _PassengerDashboardState extends State<PassengerDashboard>
         child: Text('Messages', style: TextStyle(fontSize: 18)),
       );
     }
-    if (index == 3) return const ProfilePage();
+    if (index == 3) return const PassengerProfilePage();
     return const SizedBox.shrink();
   }
 
@@ -228,7 +229,39 @@ class _PassengerDashboardState extends State<PassengerDashboard>
                           ),
                         ],
                       ),
-                      // Notification bell
+                      // Switch to Driver mode
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        debugPrint('Switch to driver mode pressed');
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => RiderDashboard()),
+                        );
+                      },
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xFFE8E0DA), width: 1.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.06),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.drive_eta_rounded,
+                          color: Color(0xFF4A4A4A),
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                    // Notification bell
                       GestureDetector(
                         onTap: () {
                           Navigator.push(

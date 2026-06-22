@@ -95,7 +95,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage>
     // Navigate to PassengerDashboard on successful verification
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 500),
@@ -106,6 +106,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage>
               return FadeTransition(opacity: animation, child: child);
             },
           ),
+          (route) => false, // Remove all previous routes
         );
       }
     });
@@ -119,62 +120,59 @@ class _OtpVerificationPageState extends State<OtpVerificationPage>
         opacity: _visible ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeOut,
-        child: SafeArea(
-          bottom: false,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      children: [
-                        // Back button
-                        _buildBackButton(),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      // Back button
+                      _buildBackButton(),
 
-                        const SizedBox(height: 16),
+                      const SizedBox(height: 8),
 
-                        // Shield icon with circular rings
-                        _buildShieldIcon(),
+                      // Shield icon with circular rings
+                      _buildShieldIcon(),
 
-                        const SizedBox(height: 8),
+                      const SizedBox(height: 4),
 
-                        // "Verify your number"
-                        _buildTitle(),
+                      // "Verify your number"
+                      _buildTitle(),
 
-                        const SizedBox(height: 12),
+                      const SizedBox(height: 6),
 
-                        // Subtitle with phone number
-                        _buildSubtitle(),
+                      // Subtitle with phone number
+                      _buildSubtitle(),
 
-                        const SizedBox(height: 28),
+                      const SizedBox(height: 12),
 
-                        // OTP input boxes
-                        _buildOtpBoxes(),
+                      // OTP input boxes
+                      _buildOtpBoxes(),
 
-                        const SizedBox(height: 28),
+                      const SizedBox(height: 28),
 
-                        // Dashed divider with temple icon
-                        _buildDashedDivider(),
+                      // Dashed divider with temple icon
+                      _buildDashedDivider(),
 
-                        const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                        // Resend OTP timer
-                        _buildResendTimer(),
+                      // Resend OTP timer
+                      _buildResendTimer(),
 
-                        const Spacer(),
+                      const Spacer(),
 
-                        // ─── Custom numeric keypad ───
-                        _buildNumericKeypad(),
-                      ],
-                    ),
+                      // ─── Custom numeric keypad ───
+                      _buildNumericKeypad(),
+                    ],
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -187,13 +185,35 @@ class _OtpVerificationPageState extends State<OtpVerificationPage>
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, top: 8),
+        padding: EdgeInsets.only(
+          left: 16,
+          top: MediaQuery.of(context).padding.top + 12,
+        ),
         child: GestureDetector(
           onTap: () => Navigator.of(context).maybePop(),
-          child: const Icon(
-            Icons.arrow_back,
-            color: Color(0xFFE52020),
-            size: 26,
+          child: Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: const Color(0xFFE52020).withValues(alpha: 0.3),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFFE52020),
+              size: 20,
+            ),
           ),
         ),
       ),

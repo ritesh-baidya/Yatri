@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../pages/notification_page.dart';
 import '../pages/post_ride_page.dart';
-import '../pages/profile_page.dart';
-import '../pages/booking_page.dart';
+import '../pages/rider_profile_page.dart';
+import '../pages/rider_booking_page.dart';
 import '../pages/fonepay_qr_page.dart';
-
+import '../pages/passenger_dashboard.dart';
 class RiderDashboard extends StatefulWidget {
   const RiderDashboard({super.key});
 
@@ -219,7 +219,36 @@ class _RiderDashboardState extends State<RiderDashboard> {
               ),
             ),
           ),
-
+                      // Switch to Passenger mode
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => PassengerDashboard()),
+                          );
+                        },
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: const Color(0xFFE8E0DA), width: 1.5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.06),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.person_rounded,
+                            color: Color(0xFF4A4A4A),
+                            size: 24,
+                          ),
+                        ),
+                      ),
           // Notification bell with red dot
           GestureDetector(
             onTap: () {

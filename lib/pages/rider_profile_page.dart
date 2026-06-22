@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../util/responsive.dart';
+import '../pages/passenger_dashboard.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -24,7 +25,7 @@ class ProfilePage extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 80),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: _buildProfileMainContentSection(),
+                children: _buildProfileMainContentSection(context),
               ),
             ),
           ),
@@ -288,7 +289,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildProfileMainContentSection() {
+  List<Widget> _buildProfileMainContentSection(BuildContext context) {
     return [
       _buildProfileMenuItem(
         icon: Icons.person_outline,
@@ -366,8 +367,22 @@ class ProfilePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              onPressed: () {
-                // TODO: implement switch action
+            onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const PassengerDashboard(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      );
+                    },
+                    transitionDuration: const Duration(milliseconds: 400),
+                  ),
+                );
               },
               child: const Row(
                 mainAxisSize: MainAxisSize.min,

@@ -38,7 +38,7 @@ class _OnboardingPageState extends State<OnboardingPage>
   }
 
   void _navigateToPassengerDashboard() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 500),
@@ -67,8 +67,8 @@ class _OnboardingPageState extends State<OnboardingPage>
 
   @override
   Widget build(BuildContext context) {
-    // Background color matching the warm cream/beige from the design
-    const bgColor = Color(0xFFF7F0E8);
+    // Background color set to white to match the top image background and eliminate gap
+    const bgColor = Colors.white;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -442,9 +442,15 @@ class _OnboardingPageState extends State<OnboardingPage>
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 18,
+              spreadRadius: 1,
+              offset: const Offset(0, 6),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
