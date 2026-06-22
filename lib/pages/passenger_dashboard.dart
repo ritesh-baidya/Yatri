@@ -5,6 +5,7 @@ import '../pages/notification_page.dart';
 import '../pages/rider_booking_page.dart';
 import '../pages/passenger_profile.dart';
 import '../pages/rider_dashboard.dart';
+import '../pages/passenger_search_results.dart';
 
 class PassengerDashboard extends StatefulWidget {
   const PassengerDashboard({super.key});
@@ -22,6 +23,120 @@ class _PassengerDashboardState extends State<PassengerDashboard>
   bool _isSwapped = false;
   String _fromCity = 'Kathmandu';
   String _toCity = 'Pokhara';
+  DateTime _selectedDate = DateTime(2025, 5, 25);
+  int _seatCount = 1;
+
+  void _selectFromCity() {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('Select Departure City'),
+        children: [
+          'Kathmandu',
+          'Pokhara',
+          'Chitwan',
+          'Butwal',
+          'Biratnagar',
+          'Lalitpur',
+          'Bhaktapur'
+        ].map((city) {
+          return SimpleDialogOption(
+            onPressed: () {
+              setState(() {
+                _fromCity = city;
+              });
+              Navigator.pop(context);
+            },
+            child: Text(city, style: const TextStyle(fontSize: 16)),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  void _selectToCity() {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('Select Destination City'),
+        children: [
+          'Kathmandu',
+          'Pokhara',
+          'Chitwan',
+          'Butwal',
+          'Biratnagar',
+          'Lalitpur',
+          'Bhaktapur'
+        ].map((city) {
+          return SimpleDialogOption(
+            onPressed: () {
+              setState(() {
+                _toCity = city;
+              });
+              Navigator.pop(context);
+            },
+            child: Text(city, style: const TextStyle(fontSize: 16)),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  void _selectSeats() {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('Select Seats'),
+        children: List.generate(6, (index) => index + 1).map((seats) {
+          return SimpleDialogOption(
+            onPressed: () {
+              setState(() {
+                _seatCount = seats;
+              });
+              Navigator.pop(context);
+            },
+            child: Text('$seats ${seats == 1 ? 'Seat' : 'Seats'}',
+                style: const TextStyle(fontSize: 16)),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    final wd = weekdays[date.weekday - 1];
+    final m = months[date.month - 1];
+    return '$wd, ${date.day} $m ${date.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -229,39 +344,8 @@ class _PassengerDashboardState extends State<PassengerDashboard>
                           ),
                         ],
                       ),
-                      // Switch to Driver mode
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        debugPrint('Switch to driver mode pressed');
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => RiderDashboard()),
-                        );
-                      },
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: const Color(0xFFE8E0DA), width: 1.5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.06),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.drive_eta_rounded,
-                          color: Color(0xFF4A4A4A),
-                          size: 24,
-                        ),
-                      ),
-                    ),
-                    // Notification bell
+
+                      // Notification bell
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -484,9 +568,9 @@ class _PassengerDashboardState extends State<PassengerDashboard>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -507,27 +591,31 @@ class _PassengerDashboardState extends State<PassengerDashboard>
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'From',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF9CA3AF),
+                child: GestureDetector(
+                  onTap: _selectFromCity,
+                  behavior: HitTestBehavior.opaque,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'From',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFF9CA3AF),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _fromCity,
-                      style: GoogleFonts.inter(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1A1A),
+                      const SizedBox(height: 2),
+                      Text(
+                        _fromCity,
+                        style: GoogleFonts.inter(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF1A1A1A),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               // Swap button
@@ -585,27 +673,31 @@ class _PassengerDashboardState extends State<PassengerDashboard>
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'To',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF9CA3AF),
+                child: GestureDetector(
+                  onTap: _selectToCity,
+                  behavior: HitTestBehavior.opaque,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'To',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFF9CA3AF),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _toCity,
-                      style: GoogleFonts.inter(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1A1A),
+                      const SizedBox(height: 2),
+                      Text(
+                        _toCity,
+                        style: GoogleFonts.inter(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF1A1A1A),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -618,44 +710,51 @@ class _PassengerDashboardState extends State<PassengerDashboard>
             children: [
               // Date
               Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFF5F5),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.calendar_today_outlined,
-                        color: Color(0xFFE52020),
-                        size: 18,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Date',
-                          style: GoogleFonts.inter(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xFF9CA3AF),
-                          ),
+                child: GestureDetector(
+                  onTap: _selectDate,
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFF5F5),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Sun, 25 May 2025',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF1A1A1A),
-                          ),
+                        child: const Icon(
+                          Icons.calendar_today_outlined,
+                          color: Color(0xFFE52020),
+                          size: 18,
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Date',
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF9CA3AF),
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              _formatDate(_selectedDate),
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF1A1A1A),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
@@ -670,44 +769,51 @@ class _PassengerDashboardState extends State<PassengerDashboard>
 
               // Passengers
               Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFF5F5),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.person_outline_rounded,
-                        color: Color(0xFFE52020),
-                        size: 18,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Passengers',
-                          style: GoogleFonts.inter(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xFF9CA3AF),
-                          ),
+                child: GestureDetector(
+                  onTap: _selectSeats,
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFF5F5),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '1 Seat',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF1A1A1A),
-                          ),
+                        child: const Icon(
+                          Icons.person_outline_rounded,
+                          color: Color(0xFFE52020),
+                          size: 18,
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Passengers',
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF9CA3AF),
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '$_seatCount ${_seatCount == 1 ? 'Seat' : 'Seats'}',
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF1A1A1A),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -735,7 +841,14 @@ class _PassengerDashboardState extends State<PassengerDashboard>
               ],
             ),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PassengerSearchResultsPage(),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
@@ -871,7 +984,6 @@ class _PassengerDashboardState extends State<PassengerDashboard>
     required IconData icon,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -881,83 +993,107 @@ class _PassengerDashboardState extends State<PassengerDashboard>
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-      child: Row(
-        children: [
-          // Bus icon with colored background
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 22,
-            ),
-          ),
-          const SizedBox(width: 14),
-
-          // Route details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PassengerSearchResultsPage(),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
               children: [
-                Row(
-                  children: [
-                    Text(
-                      fromCity,
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1A1A1A),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: const Icon(
-                        Icons.arrow_forward,
-                        color: Color(0xFF9CA3AF),
-                        size: 16,
-                      ),
-                    ),
-                    Text(
-                      toCity,
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1A1A1A),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '$duration  •  $distance',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF9CA3AF),
+                // Bus icon with colored background
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(14),
                   ),
+                  child: Icon(
+                    icon,
+                    color: color,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 14),
+
+                // Route details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              fromCity,
+                              style: GoogleFonts.inter(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF1A1A1A),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: const Icon(
+                              Icons.arrow_forward,
+                              color: Color(0xFF9CA3AF),
+                              size: 16,
+                            ),
+                          ),
+                          Flexible(
+                            child: Text(
+                              toCity,
+                              style: GoogleFonts.inter(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF1A1A1A),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$duration  •  $distance',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFF9CA3AF),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Chevron
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Color(0xFFD1D5DB),
+                  size: 24,
                 ),
               ],
             ),
           ),
-
-          // Chevron
-          const Icon(
-            Icons.chevron_right_rounded,
-            color: Color(0xFFD1D5DB),
-            size: 24,
-          ),
-        ],
+        ),
       ),
     );
   }

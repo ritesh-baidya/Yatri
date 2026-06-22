@@ -13,9 +13,10 @@ class PassengerProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFAF7F4), // match off-white background
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom + 100, // extra spacing for bottom nav bar
+          bottom: MediaQuery.of(context).padding.bottom +
+              100, // extra spacing for bottom nav bar
         ),
         child: Column(
           children: [
@@ -24,7 +25,8 @@ class PassengerProfilePage extends StatelessWidget {
 
             // ─── Settings List Container ───
             Transform.translate(
-              offset: const Offset(0, -24), // overlay on top of the hero image
+              offset: const Offset(
+                  0, 0), // moved down to prevent overlapping the cropped image
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
@@ -41,7 +43,8 @@ class PassengerProfilePage extends StatelessWidget {
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     child: Column(
                       children: _buildProfileMenuItems(),
                     ),
@@ -69,7 +72,7 @@ class PassengerProfilePage extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      height: 290, // clean height that covers background image
+      height: 230, // cropped height
       decoration: const BoxDecoration(
         color: Color(0xFFFAF7F4),
       ),
@@ -77,62 +80,31 @@ class PassengerProfilePage extends StatelessWidget {
         children: [
           // Background watercolor image with Nyatapola temple
           Positioned.fill(
-            child: Image.asset(
-              'assets/images/passenger_profile_bg.png',
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-            ),
-          ),
-
-          // Red Notification Bell with badge '3'
-          Positioned(
-            top: statusBarHeight + 8,
-            right: 20,
-            child: Container(
-              width: 44,
-              height: 44,
-              alignment: Alignment.center,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  const Icon(
-                    Icons.notifications_none_rounded,
-                    color: Color(0xFFE52020), // Red outline bell
-                    size: 28,
-                  ),
-                  Positioned(
-                    top: 6,
-                    right: 6,
-                    child: Container(
-                      padding: const EdgeInsets.all(3),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE52020), // Red badge background
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: const Text(
-                        '3',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
+            child: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white,
+                    Colors.transparent,
+                  ],
+                  stops: [0.85, 1.0], // smooth fade towards the bottom
+                ).createShader(bounds);
+              },
+              blendMode: BlendMode.dstIn,
+              child: Image.asset(
+                'assets/images/passenger_profile_bg.png',
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
               ),
             ),
           ),
 
           // Profile row containing avatar, name, email and phone number
           Positioned(
-            left: 20,
-            bottom: 48,
+            left: 15,
+            bottom: 100, // adjusted for the new cropped height
             right: 20,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -148,9 +120,10 @@ class PassengerProfilePage extends StatelessWidget {
                     ),
                   ),
                   child: const CircleAvatar(
-                    radius: 46,
+                    radius: 35,
                     backgroundColor: Colors.white,
-                    backgroundImage: AssetImage('assets/images/profile_image.jpg'),
+                    backgroundImage:
+                        AssetImage('assets/images/profile_image.jpg'),
                   ),
                 ),
                 const SizedBox(width: 18),
@@ -163,7 +136,7 @@ class PassengerProfilePage extends StatelessWidget {
                       Text(
                         'Sushma Shrestha',
                         style: GoogleFonts.inter(
-                          fontSize: 22,
+                          fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: const Color(0xFF1E293B),
                         ),
@@ -172,8 +145,8 @@ class PassengerProfilePage extends StatelessWidget {
                       Text(
                         'sushma@email.com',
                         style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
                           color: const Color(0xFF64748B),
                         ),
                       ),
@@ -181,9 +154,10 @@ class PassengerProfilePage extends StatelessWidget {
                       Text(
                         '+977 98xxxxxxxx',
                         style: GoogleFonts.inter(
-                          fontSize: 14,
+                          fontSize: 10,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFFE52020), // red colored phone number
+                          color: const Color(
+                              0xFFE52020), // red colored phone number
                         ),
                       ),
                     ],
@@ -201,7 +175,11 @@ class PassengerProfilePage extends StatelessWidget {
     final menuData = [
       {'icon': Icons.person_outline_rounded, 'title': 'Edit Profile'},
       {'icon': Icons.credit_card_outlined, 'title': 'Payment Methods'},
-      {'icon': Icons.account_balance_wallet_outlined, 'title': 'My Wallet', 'trailing': 'Rs. 589'},
+      {
+        'icon': Icons.account_balance_wallet_outlined,
+        'title': 'My Wallet',
+        'trailing': 'Rs. 589'
+      },
       {'icon': Icons.confirmation_num_outlined, 'title': 'Coupon'},
       {'icon': Icons.shield_outlined, 'title': 'Safety'},
       {'icon': Icons.help_outline_rounded, 'title': 'Help & Support'},
@@ -243,30 +221,30 @@ class PassengerProfilePage extends StatelessWidget {
         // Menu item click action
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
             // Soft red background with red icon
             Container(
-              width: 40,
-              height: 40,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: const Color(0xFFFFF1F2), // soft light red tint
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(9),
               ),
               alignment: Alignment.center,
               child: Icon(
                 icon,
                 color: const Color(0xFFE52020), // Red theme
-                size: 22,
+                size: 20,
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 title,
                 style: GoogleFonts.inter(
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: const Color(0xFF0F172A),
                 ),
@@ -276,17 +254,17 @@ class PassengerProfilePage extends StatelessWidget {
               Text(
                 trailingText,
                 style: GoogleFonts.inter(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color: const Color(0xFF64748B),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
             ],
             const Icon(
               Icons.chevron_right_rounded,
               color: Color(0xFFE52020), // red chevron
-              size: 22,
+              size: 20,
             ),
           ],
         ),
@@ -384,8 +362,9 @@ class PassengerProfilePage extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) =>
-                              const RiderDashboard(),
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const RiderDashboard(),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
                             return FadeTransition(
@@ -401,7 +380,8 @@ class PassengerProfilePage extends StatelessWidget {
                       backgroundColor: const Color(0xFFB91C1C), // Crimson Red
                       foregroundColor: Colors.white,
                       elevation: 0,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
