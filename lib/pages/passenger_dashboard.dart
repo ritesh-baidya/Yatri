@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/passenger_bottom_nav_bar.dart';
 import '../pages/notification_page.dart';
-import '../pages/rider_booking_page.dart';
+import '../pages/passenger_booking_page.dart';
 import '../pages/passenger_profile.dart';
-import '../pages/rider_dashboard.dart';
 import '../pages/passenger_search_results.dart';
 
 class PassengerDashboard extends StatefulWidget {
@@ -228,7 +227,7 @@ class _PassengerDashboardState extends State<PassengerDashboard>
   }
 
   Widget _buildOtherTab(int index) {
-    if (index == 1) return const BookingPage();
+    if (index == 1) return const PassengerBookingPage();
     if (index == 2) {
       return const Center(
         child: Text('Messages', style: TextStyle(fontSize: 18)),

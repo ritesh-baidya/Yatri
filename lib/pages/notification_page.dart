@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'payment_page.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -36,6 +37,14 @@ class NotificationPage extends StatelessWidget {
               description:
                   'You have an upcoming ride to Pokhara on Sun, 25 May at 7:00 AM.',
               time: '9:15 AM',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PaymentPage(),
+                  ),
+                );
+              },
             ),
           ),
           // Yesterday section
@@ -207,6 +216,7 @@ class NotificationPage extends StatelessWidget {
     required String time,
     String? amountText,
     Color? amountColor,
+    VoidCallback? onTap,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -227,7 +237,7 @@ class NotificationPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
-            onTap: () {},
+            onTap: onTap,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(

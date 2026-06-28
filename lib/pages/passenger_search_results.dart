@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'passenger_ride_details_page.dart';
 
 class PassengerSearchResultsPage extends StatelessWidget {
   const PassengerSearchResultsPage({super.key});
@@ -119,6 +120,7 @@ class PassengerSearchResultsPage extends StatelessWidget {
               child: Column(
                 children: [
                   _buildResultCard(
+                    context: context,
                     name: 'Ram Kumar',
                     rating: '4.8',
                     time: 'Today • 7:00 AM',
@@ -129,6 +131,7 @@ class PassengerSearchResultsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   _buildResultCard(
+                    context: context,
                     name: 'Bikash Tamang',
                     rating: '4.7',
                     time: 'Today • 8:30 AM',
@@ -139,6 +142,7 @@ class PassengerSearchResultsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   _buildResultCard(
+                    context: context,
                     name: 'Sujan Thapa',
                     rating: '4.6',
                     time: 'Today • 9:00 AM',
@@ -249,6 +253,7 @@ class PassengerSearchResultsPage extends StatelessWidget {
   }
 
   Widget _buildResultCard({
+    required BuildContext context,
     required String name,
     required String rating,
     required String time,
@@ -274,7 +279,23 @@ class PassengerSearchResultsPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RideDetailsPage(
+                  driverName: name,
+                  driverInitials: name.split(' ').map((e) => e[0]).join(),
+                  driverRating: double.tryParse(rating) ?? 4.5,
+                  totalRides: 128,
+                  pickupLocation: fromLoc,
+                  dropoffLocation: toLoc,
+                  pricePerSeat: int.tryParse(price) ?? 700,
+                  availableSeats: int.tryParse(seatsLeft.split(' ').first) ?? 3,
+                ),
+              ),
+            );
+          },
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -287,7 +308,8 @@ class PassengerSearchResultsPage extends StatelessWidget {
                     children: [
                       const CircleAvatar(
                         radius: 24,
-                        backgroundImage: AssetImage('assets/images/profile_image.jpg'),
+                        backgroundImage:
+                            AssetImage('assets/images/profile_image.jpg'),
                       ),
                       const SizedBox(height: 16),
                       Container(
@@ -296,7 +318,8 @@ class PassengerSearchResultsPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
-                          border: Border.all(color: const Color(0xFF10B981), width: 2),
+                          border: Border.all(
+                              color: const Color(0xFF10B981), width: 2),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -318,7 +341,8 @@ class PassengerSearchResultsPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
-                          border: Border.all(color: const Color(0xFFEF4444), width: 2),
+                          border: Border.all(
+                              color: const Color(0xFFEF4444), width: 2),
                         ),
                       ),
                     ],
@@ -383,7 +407,8 @@ class PassengerSearchResultsPage extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFF1F1),
                               borderRadius: BorderRadius.circular(8),
@@ -391,7 +416,8 @@ class PassengerSearchResultsPage extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.star_rounded, color: Color(0xFFE52020), size: 16),
+                                const Icon(Icons.star_rounded,
+                                    color: Color(0xFFE52020), size: 16),
                                 const SizedBox(width: 4),
                                 Text(
                                   rating,
@@ -422,7 +448,8 @@ class PassengerSearchResultsPage extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFF0F0),
                               borderRadius: BorderRadius.circular(8),
@@ -458,23 +485,23 @@ class PassengerSearchResultsPage extends StatelessWidget {
                             textAlign: TextAlign.end,
                             text: TextSpan(
                               children: [
-                                  TextSpan(
-                                    text: 'Rs. $price\n',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w800,
-                                      color: const Color(0xFF1A1A1A),
-                                      height: 1.2,
-                                    ),
+                                TextSpan(
+                                  text: 'Rs. $price\n',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                    color: const Color(0xFF1A1A1A),
+                                    height: 1.2,
                                   ),
-                                  TextSpan(
-                                    text: 'per seat',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: const Color(0xFF94A3B8),
-                                    ),
+                                ),
+                                TextSpan(
+                                  text: 'per seat',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color(0xFF94A3B8),
                                   ),
+                                ),
                               ],
                             ),
                           ),

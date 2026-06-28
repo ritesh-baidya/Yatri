@@ -51,7 +51,7 @@ class _YatriFonepayQRState extends State<YatriFonepayQR> {
                     children: [
                       // Fonepay Logo
                       Image.asset(
-                        'assets/images/fonepay_logo.png',
+                        'assets/logo/fonepay_logo.png',
                         height: 40,
                       ),
                       const SizedBox(height: 24),

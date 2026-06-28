@@ -23,4 +23,4 @@ flutter:
   assets:
     - assets/images/
     - assets/images/profile_image.jpg
-    - assets/images/fonepay_logo.png
+    - assets/logo/
