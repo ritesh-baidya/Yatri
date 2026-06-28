@@ -68,7 +68,7 @@ class PassengerProfilePage extends StatelessWidget {
   }
 
   Widget _buildProfileHeroSection(BuildContext context, Responsive r) {
-    final statusBarHeight = MediaQuery.of(context).padding.top;
+
 
     return Container(
       width: double.infinity,

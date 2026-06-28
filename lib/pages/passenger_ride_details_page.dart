@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'payment_page.dart';
+
+import 'passenger_booking_confirmed_page.dart';
 
 class RideDetailsPage extends StatefulWidget {
   final String driverName;
@@ -194,7 +195,7 @@ class _RideDetailsPageState extends State<RideDetailsPage> {
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+              padding: EdgeInsets.fromLTRB(20, 12, 20, 16 + MediaQuery.of(context).padding.bottom),
               decoration: BoxDecoration(
                 color: const Color(0xFFFAF7F4),
                 boxShadow: [
@@ -210,7 +211,12 @@ class _RideDetailsPageState extends State<RideDetailsPage> {
                 height: 54,
                 child: ElevatedButton(
                   onPressed: () {
-                    _showBookingConfirmation();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BookingConfirmedPage(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE52020),
@@ -788,7 +794,7 @@ class _RideDetailsPageState extends State<RideDetailsPage> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Rs. ${widget.pricePerSeat}',
+                        'Rs. ${widget.pricePerSeat * _selectedSeats}',
                         style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
@@ -800,7 +806,7 @@ class _RideDetailsPageState extends State<RideDetailsPage> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Price per person',
+                        'Total price',
                         style: GoogleFonts.inter(
                           fontSize: 9,
                           fontWeight: FontWeight.w600,
@@ -831,7 +837,7 @@ class _RideDetailsPageState extends State<RideDetailsPage> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        '${widget.availableSeats} Seats left',
+                        '${widget.availableSeats - _selectedSeats} Seats left',
                         style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
@@ -989,134 +995,7 @@ class _RideDetailsPageState extends State<RideDetailsPage> {
     );
   }
 
-  // ════════════════════════════════════════════════════
-  // BOOKING CONFIRMATION DIALOG
-  // ════════════════════════════════════════════════════
-  void _showBookingConfirmation() {
-    final totalPrice = _selectedSeats * widget.pricePerSeat;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Success Icon
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFECFDF5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.check_circle_rounded,
-                    color: Color(0xFF16A34A),
-                    size: 40,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Confirm Booking',
-                  style: GoogleFonts.inter(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1E293B),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Summary
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFAF7F4),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    children: [
-                      _buildSummaryRow('Route',
-                          '${widget.pickupLocation.split(',').first} → ${widget.dropoffLocation.split(',').first}'),
-                      const SizedBox(height: 8),
-                      _buildSummaryRow('Seats', '$_selectedSeats'),
-                      const SizedBox(height: 8),
-                      _buildSummaryRow(
-                          'Price/Seat', 'Rs. ${widget.pricePerSeat}'),
-                      const SizedBox(height: 8),
-                      Divider(color: const Color(0xFFE2E8F0), height: 1),
-                      const SizedBox(height: 8),
-                      _buildSummaryRow('Total', 'Rs. $totalPrice',
-                          isBold: true),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFFE2E8F0)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: Text(
-                          'Cancel',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF64748B),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const PaymentPage(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFE52020),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: Text(
-                          'Confirm',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+
 
   Widget _buildSummaryRow(String label, String value, {bool isBold = false}) {
     return Row(
